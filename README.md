@@ -22,6 +22,7 @@ To restore, copy `skills/` and `instructions/` back into `~/.copilot/` and re-ad
 
 | Skill | Summary |
 |---|---|
+| `authoring-agent-instructions-and-skills` | How I like agent files structured (distilled from platform-api): one lean always-loaded instruction file that orchestrates scoped, self-maintaining skills; context-efficiency rules; where content belongs; checklist for new setups. |
 | `diff-code-review` | Reviews the current branch's diff against a base branch (default `origin/master`) for performance, bugs, security, quality and regressions. |
 | `gitlab-mr-summary` | Writes a GitLab merge request title, summary and manual test plan from the branch diff. |
 | `grilling` | Interviews me in rounds of numbered questions (with recommended answers) to stress-test a plan or idea. |

@@ -20,6 +20,7 @@ Only maintain files in `~/.copilot/instructions/` and `~/.copilot/skills/` (incl
 - `instructions/coding-agents.instructions.md`: short rules that must apply to every session (always loaded, so keep it lean). Behaviours, communication preferences, universal coding preferences.
 - A new or existing skill under `skills/`: anything procedural, situational or long. Prefer a skill over growing the always-loaded instructions.
 - Maintenance rules like these belong in this skill, not in the instructions.
+- For how to structure, size and scope instruction files and skills (lean always-loaded instructions that orchestrate scoped skills), load `authoring-agent-instructions-and-skills`.
 - `~/.copilot/mcp-config.json`: only change when asked.
 
 ## When to add an entry
