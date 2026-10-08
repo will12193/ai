@@ -19,6 +19,7 @@ Global skills live in `~/.copilot/skills/<name>/SKILL.md`. Load the one that mat
 - **`maintain-global-agent-config`**: load **before** creating, editing, renaming or deleting anything under `~/.copilot` (whichever tool does it), and when I say "always", "never" or "from now on" about something that applies to all repos.
 - **`maintain-ai-hub-backup-repo`**: load after any `~/.copilot` change, or when the ai hub repo / `sync.sh` comes up.
 - **`maintain-authoring-agent-instructions-and-skills`**: load for structure/size/scope decisions on agent files (where content belongs, splitting, trimming, bootstrapping a repo). Use it alongside any built-in customization tooling, which owns file-format mechanics.
+- **`align-repo-agent-files`**: load when asked to align, restructure or standardise a repo's instruction files and skills to my conventions (lossless: keeps existing knowledge, applies the structure).
 
 ## Tell me when you are waiting
 

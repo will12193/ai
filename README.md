@@ -26,6 +26,7 @@ To restore, copy `skills/` and `instructions/` back into `~/.copilot/` and re-ad
 
 | Skill | Summary | Load when |
 |---|---|---|
+| `align-repo-agent-files` | Bring the current repo's instruction files and skills in line with William's authoring conventions without losing existing knowledge. | the user says 'align this repo', 'restructure this repo's agent files', 'bring the repo's skills/instructions up to my conventions', or asks to tidy, split or standardise a repo's existing instruction and skill files. |
 | `diff-code-review` | Review the code changes on the current branch (git diff against a base branch, default origin/master) for performance, bug risks, security, code quality, regressions and best practices. | the user asks to review the branch, review the diff, review their changes before opening an MR, or says 'diff code review' / 'code review this branch'. |
 | `gitlab-mr-summary` | Generate a GitLab merge request title, summary and manual test plan from the git diff of the current branch against a base branch (default origin/master). | the user asks for an MR description, MR summary, merge request text, PR description, or a test plan for their branch. |
 | `grilling` | Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases. |  |
