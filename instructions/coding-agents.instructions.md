@@ -15,9 +15,9 @@ Global skills live in `~/.copilot/skills/<name>/SKILL.md`. Load the one that mat
 - **`grilling`**: load when asked to grill, stress-test or interrogate a plan or idea.
 - **`diff-code-review`**: load when asked to review the branch/diff/changes before an MR.
 - **`gitlab-mr-summary`**: load when asked for an MR/PR description, summary or test plan.
-- **`maintain-global-agent-config`**: load **before** creating, editing, renaming or deleting anything under `~/.copilot`, and when I say "always", "never" or "from now on" about something that applies to all repos.
+- **`maintain-global-agent-config`**: load **before** creating, editing, renaming or deleting anything under `~/.copilot` (whichever tool does it), and when I say "always", "never" or "from now on" about something that applies to all repos.
 - **`maintain-ai-hub-backup-repo`**: load after any `~/.copilot` change, or when the ai hub repo / `sync.sh` comes up.
-- **`maintain-authoring-agent-instructions-and-skills`**: load when creating, restructuring or reviewing any instruction file or `SKILL.md`, in any repo.
+- **`maintain-authoring-agent-instructions-and-skills`**: load for structure/size/scope decisions on agent files (where content belongs, splitting, trimming, bootstrapping a repo). Use it alongside any built-in customization tooling, which owns file-format mechanics.
 
 ## Tell me when you are waiting
 

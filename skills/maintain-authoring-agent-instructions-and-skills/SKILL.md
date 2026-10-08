@@ -1,6 +1,6 @@
 ---
 name: maintain-authoring-agent-instructions-and-skills
-description: "How William likes agent instruction files and skills structured: one lean always-loaded instruction file that orchestrates scoped, self-maintaining skills. Use when: creating, restructuring, splitting, trimming or reviewing any instruction file (.instructions.md, copilot-instructions.md, AGENTS.md) or SKILL.md, in any repo or globally; deciding whether content belongs in the instruction file or a skill; setting up agent files for a new repo; the instruction file is getting long. Distilled from the platform-api setup."
+description: "William's preferences for how agent instruction files and skills are structured, sized and scoped: one lean always-loaded instruction file that orchestrates scoped, self-maintaining skills. Use when: deciding whether content belongs in the instruction file or a skill; splitting, trimming or restructuring agent files; the instruction file is getting long; setting up agent files for a repo that has none; reviewing agent files against these preferences. This is a policy layer: it does not cover file-format mechanics (frontmatter syntax, applyTo globs, debugging why a file isn't loaded), which belong to any built-in customization tooling. Distilled from the platform-api setup."
 ---
 
 # Authoring instruction files and skills
@@ -8,6 +8,17 @@ description: "How William likes agent instruction files and skills structured: o
 Model: **one instruction file orchestrates; skills hold the depth.** This keeps context small and each topic independently maintainable. Reference implementation: `~/dev/platform-api/.github/instructions/platform-api.instructions.md` plus `.github/skills/platform-api-*/`.
 
 For *where* global files live and the disclosure/sync duties when editing `~/.copilot`, see `maintain-global-agent-config`. This skill is about structure and content.
+
+## Working alongside built-in tooling
+
+The platform or an installed plugin may ship its own customization-authoring tooling (skills, commands, validators). Treat it as a partner, not a competitor. It is referred to here by role, not name, so this holds for any current or future tool.
+
+- **Division of labour.** Tooling owns *mechanics*: file formats, frontmatter syntax and required fields, `applyTo` globs, locations the platform requires, tool restrictions, validation diagnostics, debugging why a file isn't loaded. This skill owns *policy*: what belongs where, size budget, orchestration, scope, the one-way repo boundary (section 0).
+- **Both may load on one task.** Use tooling for how to write a valid file, and this skill for what to put in it and where. Don't restate mechanics here.
+- **Conflicts.** On mechanics, the platform wins; if the correction is durable, fix this skill. On policy, this skill wins, unless following it would produce a file the platform can't load, in which case follow the platform and tell William.
+- **Duties don't transfer.** If tooling creates or edits anything under `~/.copilot`, the change-control, disclosure and sync duties still apply (`maintain-global-agent-config`).
+- **No tooling available?** Fall back to the standard layout in section 7 and the shapes in this file.
+- **New tooling appears** in the available-skills list: check its description against this boundary. If it overlaps, narrow the trigger phrases of our skills (policy wording, not generic "create a skill/instructions file") rather than duplicating its content.
 
 ## 0. Where knowledge lives
 
@@ -100,4 +111,4 @@ Standard layout for all repos: `.github/instructions/*.instructions.md` and `.gi
 
 ## Maintaining This Skill File
 
-Update this file (and nothing outside the global scope) when William states a new preference about how agent files should be structured, sized or scoped, or when a structure turns out to work badly in practice. Keep entries short.
+Update this file (and nothing outside the global scope) when William states a new preference about how agent files should be structured, sized or scoped, when a structure turns out to work badly in practice, or when new tooling changes the mechanics/policy boundary above. Keep entries short.
