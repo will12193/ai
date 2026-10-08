@@ -11,7 +11,10 @@ A read-out of the agent's **own current context**, for the user. Be honest and c
 
 ## Rules
 
-- Report what is **actually in your context right now** (system prompt, injected instruction blocks, the available-skills list, tool list). Do not infer it from what exists on disk, and do not read files to "fill in" the report. If something exists on disk but is not in your context, flag it as a mismatch; don't list it as loaded.
+- Report what is **actually in your context right now** (system prompt, injected instruction blocks, the available-skills list, tool list). Never count something as loaded just because it exists on disk.
+- You may do a **read-only listing** (no content reads, no edits) of the standard instruction locations to detect mismatches: `~/.copilot/instructions/`, `~/.copilot/copilot-instructions.md`, and the repo's `.github/instructions/`, `.github/copilot-instructions.md`, `AGENTS.md`, `CLAUDE.md`. Anything on disk but absent from context goes under Concerns as a mismatch, never under "loaded".
+- Instruction files with an `applyTo` are path-specific in Copilot CLI: they are only included when the agent is working with a matching file, so in a file-free session they are legitimately absent. Report such files as **present but conditional**, not as broken. Files without `applyTo` should always be loaded; if one is missing, that is a real problem.
+- The CLI's `/instructions` command lists discovered instruction files and can toggle them; suggest it when a mismatch is found.
 - Don't guess or flatter. If you can't tell whether something is loaded, say "unsure". Never claim an instruction or skill is loaded that you can't point to.
 - Loaded context can be stale: instruction files are read at session start, so edits made on disk since then may not be reflected. Say so when relevant.
 - Keep it compact: one line per item, no paraphrasing of whole files.

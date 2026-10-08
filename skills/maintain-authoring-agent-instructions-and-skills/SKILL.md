@@ -28,7 +28,7 @@ Concrete coding conventions, domain knowledge and gotchas belong in the **repo t
 
 ## 1. Context efficiency (the main constraint)
 
-- The instruction file (`applyTo: "**"`) is loaded **every session**. Every line costs context on every task. Keep it compact: target roughly 150-300 lines, and shrink it whenever it grows.
+- The instruction file is meant to be loaded **every session** (see "Making it actually always-on" in section 2). Every line costs context on every task. Keep it compact: target roughly 150-300 lines, and shrink it whenever it grows.
 - Skills load **on demand** by `description` match, so they can be long and detailed.
 - The instruction file must still carry the **essential patterns** (the things needed on almost every task) or else point to the skill that does. Never leave an essential pattern undocumented and unreferenced.
 - Test for each piece of content: *"Is this needed on most tasks?"* Yes → instruction file (tersely). No, only for one area/situation → skill, with a one-line pointer.
@@ -38,7 +38,7 @@ Concrete coding conventions, domain knowledge and gotchas belong in the **repo t
 
 Order of sections, matching the platform-api file:
 
-1. **Frontmatter**: `description` (what it covers, incl. "and the skill map") and `applyTo: "**"` (or a narrower glob if truly scoped).
+1. **Frontmatter**: `description` (what it covers, incl. "and the skill map") and, for a repo file, `applyTo: "**"` (or a narrower glob if truly scoped). A global always-on file omits `applyTo` (see below).
 2. **Title + one-liner**: project identity (module/name) and where conventions live.
 3. **Skills** (the skill map, near the top): one bullet per skill: `**name**` - what it covers; **load for** <specific files/tasks/errors that trigger it>. Also name the **reference implementation** (the best existing example to copy) and any blanket rule (e.g. "don't touch files outside the task").
 4. **Essentials** needed on most tasks: runtime/stack facts, domain glossary, structure/layering, the 3-6 core patterns (one tight example each), helpers table, checklist for the most common task (e.g. "add a new feature").
@@ -46,6 +46,14 @@ Order of sections, matching the platform-api file:
 6. **Maintaining These Files** (last): see section 5.
 
 The instruction file **scopes problems**: it tells the agent which skill to load for which kind of work, so the agent loads only what it needs.
+
+### Making it actually always-on
+
+A `*.instructions.md` file with `applyTo` is path-specific in Copilot CLI: it is included only when the agent is working with a file matching the glob. `applyTo: "**"` therefore does **not** guarantee loading in a session that has touched no files (e.g. a health check, a question, a plan). Verified against the Copilot CLI custom-instructions docs; recheck if loading behaviour changes.
+
+- **Global file** (`~/.copilot/instructions/*.instructions.md`): omit `applyTo`. A file without it is not path-restricted, so it loads every session. Do not "tidy" it back in.
+- **Repo file**: keep `applyTo: "**"` for file-matching, and make sure an always-discovered file points at it, e.g. a one-line `AGENTS.md` ("See .github/instructions/*.md for agent instructions"), as platform-api does. Without that pointer the repo file may not load in file-free sessions.
+- When a session seems not to have an instruction file, check this before assuming the content is wrong.
 
 ## 3. Skills: scoped, narrow, trigger-rich
 
@@ -101,7 +109,7 @@ Trigger: you learned something repo-specific worth recording and the repo has no
 
 1. **Do not create files unasked.** Tell the user what you learned and offer to bootstrap the repo's agent files. Repo files get committed to their history, so this is their call.
 2. If they agree, create the **minimal** set in the standard layout:
-   - `.github/instructions/<repo>.instructions.md` with `applyTo: "**"`: identity one-liner, Skills section (may be empty with a note), 3-6 essentials you actually know, and the Maintaining These Files section. Target under 60 lines; it grows later.
+   - `.github/instructions/<repo>.instructions.md` with `applyTo: "**"`, plus a one-line `AGENTS.md` pointing at it so it loads even when no file is in play: identity one-liner, Skills section (may be empty with a note), 3-6 essentials you actually know, and the Maintaining These Files section. Target under 60 lines; it grows later.
    - A skill under `.github/skills/<repo>-<area>/SKILL.md` **only** if the lesson is clearly situational or long; otherwise record it in the instruction file.
 3. Record the lesson, then stop; don't speculate about conventions you haven't observed.
 4. If the repo already uses another convention (`AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`), add to that instead of introducing a second layout, and tell the user.

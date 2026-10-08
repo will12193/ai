@@ -65,7 +65,8 @@ def split_desc(desc):
 out = ["### Instructions (`instructions/`)", "", "| File | Summary | applyTo |", "|---|---|---|"]
 for path in sorted(glob.glob(os.path.join(root, "instructions", "*.md"))):
     fm = frontmatter(path)
-    out.append(f"| `{os.path.basename(path)}` | {cell(fm.get('description', '(no description)'))} | `{fm.get('applyTo', '')}` |")
+    applies = f"`{fm['applyTo']}`" if fm.get("applyTo") else "none (always loaded)"
+    out.append(f"| `{os.path.basename(path)}` | {cell(fm.get('description', '(no description)'))} | {applies} |")
 
 out += ["", "### Skills (`skills/`)", "", "| Skill | Summary | Load when |", "|---|---|---|"]
 for path in sorted(glob.glob(os.path.join(root, "skills", "*", "SKILL.md"))):
