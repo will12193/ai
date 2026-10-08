@@ -13,6 +13,8 @@ For *where* global files live and the disclosure/sync duties when editing `~/.co
 
 Concrete coding conventions, domain knowledge and gotchas belong in the **repo that uses them**, in that repo's instruction file and skills. The global layer (`~/.copilot`) does not collect them; its job is to **orchestrate**: hold cross-repo behaviours and preferences, and define how every repo's agent files are structured and maintained so knowledge is gathered inside each repo in a consistent shape. When in doubt, push structure down into the repo rather than pulling conventions up to global.
 
+**The relationship is one-way.** Repo agent files are shared with teammates who do not have the global layer. They must stand alone: never reference `~/.copilot`, the ai hub repo, `sync.sh`, any global skill, "Global Agent Behaviour Change", or William by name, and never say "per the user's preference". Write repo files in a neutral team voice about what is true of the codebase. A personal preference that is not a team convention does not go in a repo file: if it is cross-repo it goes global; if it is repo-specific, ask William where it should live.
+
 ## 1. Context efficiency (the main constraint)
 
 - The instruction file (`applyTo: "**"`) is loaded **every session**. Every line costs context on every task. Keep it compact: target roughly 150-300 lines, and shrink it whenever it grows.
@@ -70,7 +72,7 @@ Every instruction file and skill ends with a maintenance section so knowledge ga
   - **When to add an entry**: spent several tool calls working out an undocumented pattern/command; hit a bug whose cause/fix wasn't obvious; found a convention/helper/env var likely to recur; the user corrected a wrong assumption.
   - **How**: extend an existing section over adding a new one; short entries (symptom, cause, fix); exact error text; no one-off trivia.
 - **Each skill** ends with `## Maintaining This Skill File`: "Update this file (not the instructions files) when you discover <its kinds of things>. Keep entries short: symptom, cause, fix."
-- **Scope strictly.** A file's maintenance rules cover only the files in its own scope. A repo's files maintain that repo's files; the global files maintain only global files. Never edit another scope's files; tell the user instead.
+- **Scope strictly.** A file's maintenance rules cover only the files in its own scope. A repo's files maintain that repo's files; the global files maintain only global files. Never edit another scope's files; tell the user instead. Repo maintaining sections must not route anything to the global layer (see section 0).
 - Adding a skill means updating the instruction file's **Skills** list and **Maintaining** list in the same change.
 
 ## 6. Creating a new setup (checklist)
@@ -92,6 +94,7 @@ Trigger: you learned something repo-specific worth recording and the repo has no
    - A skill under `.github/skills/<repo>-<area>/SKILL.md` **only** if the lesson is clearly situational or long; otherwise record it in the instruction file.
 3. Record the lesson, then stop; don't speculate about conventions you haven't observed.
 4. If the repo already uses another convention (`AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`), add to that instead of introducing a second layout, and tell the user.
+5. Before finishing, re-read every new file as a teammate with no global layer: no references to `~/.copilot`, global skills, the ai hub, or William; neutral voice; nothing that only makes sense to him (section 0).
 
 Standard layout for all repos: `.github/instructions/*.instructions.md` and `.github/skills/<name>/SKILL.md`, as in platform-api.
 

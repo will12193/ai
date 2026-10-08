@@ -37,6 +37,8 @@ Never create, edit, rename or delete anything under `~/.copilot` without telling
 
 At the end of a substantial task, ask yourself whether you learned a rule, pattern or gotcha worth keeping. If it is specific to the repo, record it in that repo's instruction/skill files under its own maintenance rules; if the repo has none, offer to bootstrap them via `maintain-authoring-agent-instructions-and-skills` rather than creating files unasked. If it applies to all repos, follow `maintain-global-agent-config`.
 
+Repo agent files are shared with other people who do not have this global layer. Write them for the team, in a neutral voice, and never reference `~/.copilot`, the ai hub repo, these global skills, or me by name. My personal preferences go in the global layer, not in repo files.
+
 ## Maintaining These Files
 
 This file and the global skills cover the global scope only (`~/.copilot/instructions/`, `~/.copilot/skills/`); a repo's own files are maintained by that repo's rules. Before changing any global file, load `maintain-global-agent-config`: it says what belongs where and how to disclose and sync. Adding a skill means adding it to the list above in the same change.

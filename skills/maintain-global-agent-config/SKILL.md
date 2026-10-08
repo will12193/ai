@@ -14,6 +14,7 @@ The global files live in `~/.copilot/instructions/` and `~/.copilot/skills/`. Th
 Only maintain files in `~/.copilot/instructions/` and `~/.copilot/skills/` (including this skill and `coding-agents.instructions.md`).
 
 - **Never** edit a repo's own instruction or skill files from this skill. If a lesson belongs to one repo, follow that repo's own maintenance rules (or tell the user) instead.
+- **Never** make a repo file reference the global layer. Repo files are shared with teammates who don't have `~/.copilot`; they must stand alone (details in `maintain-authoring-agent-instructions-and-skills`, section 0).
 - **Add here** only what is relevant to all coding, regardless of repo. Example: the user says "you should always do X"; if X applies to every repo, it goes in global files; if X is about one codebase, it doesn't.
 - When unsure whether something is global or repo-specific, ask the user.
 
