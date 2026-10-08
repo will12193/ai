@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "gitlab": {
+      "type": "local",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-gitlab"
+      ],
+      "tools": [
+        "*"
+      ],
+      "env": {
+        "GITLAB_PERSONAL_ACCESS_TOKEN": "<redacted>",
+        "GITLAB_API_URL": "<redacted>"
+      }
+    }
+  }
+}
