@@ -1,38 +1,43 @@
 # ai
 
-Backup of my Copilot CLI customisation. `~/.copilot` is the source of truth; this repo is overwritten from it by `sync.sh`.
+My AI hub: a backup of my global Copilot CLI customisation, and the place where the structure for scaling agent knowledge across my repos is defined.
+
+`~/.copilot` is the source of truth; this repo is overwritten from it by `sync.sh`. Concrete coding conventions live in each repo's own agent files; the global layer here holds cross-repo behaviours and the rules for how those repo files are structured and maintained.
 
 ## How it works
 
-1. Change things in `~/.copilot` (never directly in `skills/`, `instructions/` or `mcp-config.redacted.json` here - they get overwritten).
-2. Update this README if skills or instructions changed.
-3. Run `./sync.sh`: it copies the config, scans for secrets, then commits and pushes.
+1. Change things in `~/.copilot` (never directly in `skills/`, `instructions/` or `mcp-config.redacted.json` here; `sync.sh` refuses to run if they have uncommitted edits).
+2. Run `./sync.sh "what changed and why"`. It copies the config, regenerates the tables below from each file's frontmatter, scans for secrets, then commits with that message and pushes. With no argument the message is `Backup <date>`.
 
-`README.md`, `sync.sh` and `.gitignore` live only in this repo and are edited here.
+The hand-written parts of this README, `sync.sh` and `.gitignore` live only in this repo and are edited here.
 
 To restore, copy `skills/` and `instructions/` back into `~/.copilot/` and re-add secrets to `mcp-config.json` by hand.
 
-## Instructions (`instructions/`)
+## What's in here
 
-| File | Summary |
-|---|---|
-| `coding-agents.instructions.md` | My personal general-purpose rules for all coding agents (`applyTo: **`): the map of global skills and when to load each, the rule to tell me when waiting on something slow (what for, rough time estimate), and a pointer to the maintenance rules. |
+<!-- BEGIN GENERATED -->
+### Instructions (`instructions/`)
 
-## Skills (`skills/`)
+| File | Summary | applyTo |
+|---|---|---|
+| `coding-agents.instructions.md` | William's personal general-purpose rules for all coding agents, plus the map of his global skills. Always apply, in every repo. | `**` |
 
-| Skill | Summary |
-|---|---|
-| `maintain-authoring-agent-instructions-and-skills` | How I like agent files structured (distilled from platform-api): one lean always-loaded instruction file that orchestrates scoped, self-maintaining skills; context-efficiency rules; where content belongs; checklist for new setups. |
-| `diff-code-review` | Reviews the current branch's diff against a base branch (default `origin/master`) for performance, bugs, security, quality and regressions. |
-| `gitlab-mr-summary` | Writes a GitLab merge request title, summary and manual test plan from the branch diff. |
-| `grilling` | Interviews me in rounds of numbered questions (with recommended answers) to stress-test a plan or idea. |
-| `health-check` | Prompt-style skill I invoke to get an honest read-out of the agent's current context: instruction files and skills loaded (grouped global / repo / other), tools, a session summary, and any concerns. |
-| `maintain-ai-hub-backup-repo` | Rules for maintaining this repo: edit `~/.copilot` first, update this README, then run `sync.sh`. |
-| `maintain-global-agent-config` | Rules for evolving my global instructions and skills: global scope only, when/how to add entries, must tell me in chat under a "Global Agent Behaviour Change" header, and must sync afterwards. |
+### Skills (`skills/`)
 
-## Other files
+| Skill | Summary | Load when |
+|---|---|---|
+| `diff-code-review` | Review the code changes on the current branch (git diff against a base branch, default origin/master) for performance, bug risks, security, code quality, regressions and best practices. | the user asks to review the branch, review the diff, review their changes before opening an MR, or says 'diff code review' / 'code review this branch'. |
+| `gitlab-mr-summary` | Generate a GitLab merge request title, summary and manual test plan from the git diff of the current branch against a base branch (default origin/master). | the user asks for an MR description, MR summary, merge request text, PR description, or a test plan for their branch. |
+| `grilling` | Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases. |  |
+| `health-check` | Report honestly what the agent currently has in its context: instruction files loaded (grouped by level: global, repo, other), skills available, and relevant session state. | the user says 'health check', 'health-check', '/health-check', 'what do you have loaded', 'what instructions/skills do you have', 'what's in your context', or asks for a status of the session. |
+| `maintain-ai-hub-backup-repo` | Maintain the user's AI hub backup repo (~/dev/ai, GitHub will12193/ai) that mirrors ~/.copilot. | the user asks to add, change, rename or remove any Copilot skill, instruction, or MCP config; mentions the 'ai hub', 'ai repo', 'sync.sh', or backing up Copilot config; or after any edit under ~/.copilot/skills or ~/.copilot/instructions. |
+| `maintain-authoring-agent-instructions-and-skills` | How William likes agent instruction files and skills structured: one lean always-loaded instruction file that orchestrates scoped, self-maintaining skills. | creating, restructuring, splitting, trimming or reviewing any instruction file (.instructions.md, copilot-instructions.md, AGENTS.md) or SKILL.md, in any repo or globally; deciding whether content belongs in the instruction file or a skill; setting up agent files for a new repo; the instruction file is getting long. Distilled from the platform-api setup. |
+| `maintain-global-agent-config` | Rules for evolving William's GLOBAL agent files in ~/.copilot (instructions/ and skills/): when to add or change a rule or skill, what scope belongs there, and the mandatory disclosure and sync steps. | the user says 'you should always...', 'never...', 'from now on', corrects a wrong assumption or preference that applies to all repos, a knowledge gap or recurring pattern is discovered that is relevant to all coding regardless of repo, or you are about to create/edit/delete any file under ~/.copilot/instructions or ~/.copilot/skills. |
+<!-- END GENERATED -->
+
+### Other files
 
 - `mcp-config.redacted.json` - MCP server layout with all env/header values redacted.
-- `sync.sh` - copy, secret-scan, commit and push.
+- `sync.sh` - copy, regenerate README tables, secret-scan, commit and push.
 
 Session history, databases and logs are deliberately not backed up.

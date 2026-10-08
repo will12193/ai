@@ -29,6 +29,14 @@ Whenever you have to wait on something that takes noticeable time (running tests
 
 Keep it to one or two lines. If the wait runs well past your estimate, post a brief update with the new estimate.
 
+## Global files are change-controlled
+
+Never create, edit, rename or delete anything under `~/.copilot` without telling me. Every such change must be listed under a `## Global Agent Behaviour Change` header at the end of the message and backed up with `~/dev/ai/sync.sh` (see `maintain-ai-hub-backup-repo`). No exceptions.
+
+## Record what you learn
+
+At the end of a substantial task, ask yourself whether you learned a rule, pattern or gotcha worth keeping. If it is specific to the repo, record it in that repo's instruction/skill files under its own maintenance rules. If it applies to all repos, follow `maintain-global-agent-config`.
+
 ## Maintaining These Files
 
-This file and the global skills cover the global scope only (`~/.copilot/instructions/`, `~/.copilot/skills/`); a repo's own files are maintained by that repo's rules. Before changing any global file, load `maintain-global-agent-config`: it says what belongs where, requires telling me under a `## Global Agent Behaviour Change` header, and requires a sync via `maintain-ai-hub-backup-repo`. Adding a skill means adding it to the list above in the same change.
+This file and the global skills cover the global scope only (`~/.copilot/instructions/`, `~/.copilot/skills/`); a repo's own files are maintained by that repo's rules. Before changing any global file, load `maintain-global-agent-config`: it says what belongs where and how to disclose and sync. Adding a skill means adding it to the list above in the same change.

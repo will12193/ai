@@ -9,6 +9,10 @@ Model: **one instruction file orchestrates; skills hold the depth.** This keeps 
 
 For *where* global files live and the disclosure/sync duties when editing `~/.copilot`, see `maintain-global-agent-config`. This skill is about structure and content.
 
+## 0. Where knowledge lives
+
+Concrete coding conventions, domain knowledge and gotchas belong in the **repo that uses them**, in that repo's instruction file and skills. The global layer (`~/.copilot`) does not collect them; its job is to **orchestrate**: hold cross-repo behaviours and preferences, and define how every repo's agent files are structured and maintained so knowledge is gathered inside each repo in a consistent shape. When in doubt, push structure down into the repo rather than pulling conventions up to global.
+
 ## 1. Context efficiency (the main constraint)
 
 - The instruction file (`applyTo: "**"`) is loaded **every session**. Every line costs context on every task. Keep it compact: target roughly 150-300 lines, and shrink it whenever it grows.
