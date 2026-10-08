@@ -5,6 +5,8 @@ description: "Report honestly what the agent currently has in its context: instr
 
 # Health check
 
+Companion to `~/.copilot/instructions/coding-agents.instructions.md` (global rules and skill map); this file is the report procedure.
+
 A read-out of the agent's **own current context**, for the user. Be honest and concrete. This is a report, not a task: don't change any files and don't start other work.
 
 ## Rules

@@ -5,7 +5,7 @@ description: "Generate a GitLab merge request title, summary and manual test pla
 
 # GitLab MR Summary
 
-Generate a GitLab merge request description for the current branch.
+Companion to `~/.copilot/instructions/coding-agents.instructions.md` (global rules and skill map); this file is the procedure for writing a GitLab merge request description for the current branch.
 
 ## Steps
 
@@ -29,3 +29,7 @@ A short, descriptive title for the merge request.
 - Each item should be a concrete, actionable verification step derived from the diff.
 
 Do not add any commentary outside these three sections.
+
+## Maintaining This Skill File
+
+Update this file (not the instructions file) when the user asks for a different MR layout, section, length limit or base-branch behaviour. Keep entries short.

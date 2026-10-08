@@ -5,6 +5,8 @@ description: "Rules for evolving William's GLOBAL agent files in ~/.copilot (ins
 
 # Maintaining the global agent files
 
+Companion to `~/.copilot/instructions/coding-agents.instructions.md` (global rules and skill map); this file covers *when and whether* to change a global file and the duties that follow. Structure and sizing rules are in `maintain-authoring-agent-instructions-and-skills`; the backup/sync mechanics are in `maintain-ai-hub-backup-repo`.
+
 The global files live in `~/.copilot/instructions/` and `~/.copilot/skills/`. They are loaded alongside repo-specific instruction and skill files (e.g. a project's own `copilot-instructions.md` or `platform-api-*` skills). They should evolve as knowledge gaps and preferences are discovered, so the next session doesn't have to rediscover them.
 
 ## Scope: global only
@@ -54,3 +56,7 @@ List each file touched, what changed (added / modified / removed) and why, in a 
 ## Mandatory: sync after every change
 
 After any change to the global files, back up with the `maintain-ai-hub-backup-repo` skill: update `/Users/william/dev/ai/README.md` (summaries of every instruction and skill) and then run `/Users/william/dev/ai/sync.sh`, which commits and pushes. Confirm it printed `Backed up.` and mention the sync in the Global Agent Behaviour Change section.
+
+## Maintaining This Skill File
+
+Update this file when the user changes the rules for what counts as global, how changes must be disclosed, or what must happen after a change. Keep entries short.

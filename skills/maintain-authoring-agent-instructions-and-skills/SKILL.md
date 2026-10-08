@@ -33,10 +33,10 @@ The instruction file **scopes problems**: it tells the agent which skill to load
 ## 3. Skills: scoped, narrow, trigger-rich
 
 - **One skill per cohesive problem area** (e.g. query builder, tests, errors, one domain, lint recipes). Split when a skill covers two areas that would be loaded independently; merge when two are always loaded together.
-- Name: `<scope>-<area>` (e.g. `platform-api-tests`). Folder = `name`. File = `SKILL.md`.
+- Name: repo skills use `<scope>-<area>` (e.g. `platform-api-tests`); global skills use a plain descriptive name (e.g. `health-check`), with a `maintain-` prefix for meta skills. Folder = `name`. File = `SKILL.md`.
 - **`description` is the trigger.** Quote it. Say what it covers, then `Use when:` with concrete triggers: file names (`query.go`, `*_test.go`), tools/commands, symbols, and **exact error messages**. Flag outdated knowledge explicitly when relevant ("anything you remember about X is OUT OF DATE").
 - Body shape:
-  1. `# <Scope> — <Area> Skill`
+  1. `# <Scope> — <Area> Skill` for repo skills; a plain title for global ones.
   2. **Companion line**: "Companion to `<instruction file path>`, which covers X; this file covers Y in depth." (Prevents duplication and tells the agent what it already has.)
   3. Core idea / mental model first, then reference, then gotchas.
   4. Gotchas as **symptom → cause → fix**, with the exact error text so future greps match.
@@ -75,7 +75,7 @@ Every instruction file and skill ends with a maintenance section so knowledge ga
 3. Identify areas that are situational or long; make each a skill with a trigger-rich `description`, companion line and maintenance section.
 4. Cross-check: every skill is in the skill map and maintaining list; no duplicated content; the instruction file still carries (or points to) every essential pattern.
 5. Re-read the instruction file as a fresh agent: can it tell what to load for a given task? Trim anything not needed on most tasks.
-6. For a global change: disclose under `## Global Agent Behaviour Change`, update the ai-hub README and run `sync.sh` (see `maintain-ai-hub`).
+6. For a global change: disclose under `## Global Agent Behaviour Change`, update the ai-hub README and run `sync.sh` (see `maintain-ai-hub-backup-repo`).
 
 ## Maintaining This Skill File
 

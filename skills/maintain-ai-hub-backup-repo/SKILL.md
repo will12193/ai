@@ -5,13 +5,15 @@ description: "Maintain the user's AI hub backup repo (/Users/william/dev/ai, wil
 
 # Maintain the AI hub repo
 
+Companion to `~/.copilot/instructions/coding-agents.instructions.md` (global rules and skill map) and to `maintain-global-agent-config` (what may change and the disclosure duty); this file covers the backup repo and sync only.
+
 `/Users/william/dev/ai` (GitHub: will12193/ai) is a **backup** of shareable Copilot config. `~/.copilot` is the source of truth; the repo is overwritten from it by `sync.sh`.
 
 ## Golden rule
 
-Any change to files under `~/.copilot` must also follow `maintain-global-agent-config` (disclose it to the user under a "Global Agent Behaviour Change" header at the end of the message).
-
 **Never edit `skills/`, `instructions/` or `mcp-config.redacted.json` in the repo.** Those edits are destroyed on the next sync. Change the real files in `~/.copilot` first, then sync.
+
+Any change to files under `~/.copilot` must also follow `maintain-global-agent-config` (disclose it under a "Global Agent Behaviour Change" header at the end of the message).
 
 | Repo path | Source of truth |
 |---|---|
@@ -46,3 +48,7 @@ Derive summaries from each file's frontmatter `description` and body. If an inst
 - Don't back up session history, databases, logs, or the unredacted `mcp-config.json`.
 - Don't commit secrets; keep the sync's secret scan in place.
 - Don't hand-edit synced files in the repo "just to be quick".
+
+## Maintaining This Skill File
+
+Update this file (not `maintain-global-agent-config`) when the repo layout, `sync.sh` behaviour, README requirements or restore steps change, or when a sync fails for a reason worth recording (symptom, cause, fix). Keep entries short.

@@ -5,7 +5,7 @@ description: "Review the code changes on the current branch (git diff against a 
 
 # Diff Code Review
 
-Review the code changes on the current branch against a base branch.
+Companion to `~/.copilot/instructions/coding-agents.instructions.md` (global rules and skill map); this file is the procedure for reviewing a branch diff. Review the code changes on the current branch against a base branch.
 
 ## Steps
 
@@ -32,3 +32,7 @@ For each issue found, cite the file and approximate location, explain the concer
 - **Other crucial concerns** — anything else important that doesn't fit the above (e.g. breaking changes, missing tests, concurrency bugs).
 
 If a category has no issues, state "No issues found" under that heading rather than omitting it. Do not comment on line/file counts — focus only on substantive findings. When referencing an issue, include a markdown link to the file and line (or line range).
+
+## Maintaining This Skill File
+
+Update this file (not the instructions file) when the user asks for a different review focus, output shape or base-branch behaviour, or when a step turns out to be unreliable in practice. Keep entries short.
