@@ -9,6 +9,8 @@ description: "Maintain the user's AI hub backup repo (/Users/william/dev/ai, wil
 
 ## Golden rule
 
+Any change to files under `~/.copilot` must also follow `maintain-global-agent-config` (disclose it to the user under a "Global Agent Behaviour Change" header at the end of the message).
+
 **Never edit `skills/`, `instructions/` or `mcp-config.redacted.json` in the repo.** Those edits are destroyed on the next sync. Change the real files in `~/.copilot` first, then sync.
 
 | Repo path | Source of truth |
