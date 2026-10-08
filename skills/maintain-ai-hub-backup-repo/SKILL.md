@@ -1,5 +1,5 @@
 ---
-name: maintain-ai-hub
+name: maintain-ai-hub-backup-repo
 description: "Maintain the user's AI hub backup repo (/Users/william/dev/ai, will12193/ai) that mirrors ~/.copilot. Use when: the user asks to add, change, rename or remove any Copilot skill, instruction, or MCP config; mentions the 'ai hub', 'ai repo', 'sync.sh', or backing up Copilot config; or after any edit under ~/.copilot/skills or ~/.copilot/instructions."
 ---
 

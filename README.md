@@ -22,11 +22,12 @@ To restore, copy `skills/` and `instructions/` back into `~/.copilot/` and re-ad
 
 | Skill | Summary |
 |---|---|
-| `authoring-agent-instructions-and-skills` | How I like agent files structured (distilled from platform-api): one lean always-loaded instruction file that orchestrates scoped, self-maintaining skills; context-efficiency rules; where content belongs; checklist for new setups. |
+| `maintain-authoring-agent-instructions-and-skills` | How I like agent files structured (distilled from platform-api): one lean always-loaded instruction file that orchestrates scoped, self-maintaining skills; context-efficiency rules; where content belongs; checklist for new setups. |
 | `diff-code-review` | Reviews the current branch's diff against a base branch (default `origin/master`) for performance, bugs, security, quality and regressions. |
 | `gitlab-mr-summary` | Writes a GitLab merge request title, summary and manual test plan from the branch diff. |
 | `grilling` | Interviews me in rounds of numbered questions (with recommended answers) to stress-test a plan or idea. |
-| `maintain-ai-hub` | Rules for maintaining this repo: edit `~/.copilot` first, update this README, then run `sync.sh`. |
+| `health-check` | Prompt-style skill I invoke to get an honest read-out of the agent's current context: instruction files and skills loaded (grouped global / repo / other), tools, a session summary, and any concerns. |
+| `maintain-ai-hub-backup-repo` | Rules for maintaining this repo: edit `~/.copilot` first, update this README, then run `sync.sh`. |
 | `maintain-global-agent-config` | Rules for evolving my global instructions and skills: global scope only, when/how to add entries, must tell me in chat under a "Global Agent Behaviour Change" header, and must sync afterwards. |
 
 ## Other files

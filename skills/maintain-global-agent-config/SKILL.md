@@ -20,7 +20,7 @@ Only maintain files in `~/.copilot/instructions/` and `~/.copilot/skills/` (incl
 - `instructions/coding-agents.instructions.md`: short rules that must apply to every session (always loaded, so keep it lean). Behaviours, communication preferences, universal coding preferences.
 - A new or existing skill under `skills/`: anything procedural, situational or long. Prefer a skill over growing the always-loaded instructions.
 - Maintenance rules like these belong in this skill, not in the instructions.
-- For how to structure, size and scope instruction files and skills (lean always-loaded instructions that orchestrate scoped skills), load `authoring-agent-instructions-and-skills`.
+- For how to structure, size and scope instruction files and skills (lean always-loaded instructions that orchestrate scoped skills), load `maintain-authoring-agent-instructions-and-skills`.
 - `~/.copilot/mcp-config.json`: only change when asked.
 
 ## When to add an entry
@@ -53,4 +53,4 @@ List each file touched, what changed (added / modified / removed) and why, in a 
 
 ## Mandatory: sync after every change
 
-After any change to the global files, back up with the `maintain-ai-hub` skill: update `/Users/william/dev/ai/README.md` (summaries of every instruction and skill) and then run `/Users/william/dev/ai/sync.sh`, which commits and pushes. Confirm it printed `Backed up.` and mention the sync in the Global Agent Behaviour Change section.
+After any change to the global files, back up with the `maintain-ai-hub-backup-repo` skill: update `/Users/william/dev/ai/README.md` (summaries of every instruction and skill) and then run `/Users/william/dev/ai/sync.sh`, which commits and pushes. Confirm it printed `Backed up.` and mention the sync in the Global Agent Behaviour Change section.

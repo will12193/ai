@@ -1,5 +1,5 @@
 ---
-name: authoring-agent-instructions-and-skills
+name: maintain-authoring-agent-instructions-and-skills
 description: "How William likes agent instruction files and skills structured: one lean always-loaded instruction file that orchestrates scoped, self-maintaining skills. Use when: creating, restructuring, splitting, trimming or reviewing any instruction file (.instructions.md, copilot-instructions.md, AGENTS.md) or SKILL.md, in any repo or globally; deciding whether content belongs in the instruction file or a skill; setting up agent files for a new repo; the instruction file is getting long. Distilled from the platform-api setup."
 ---
 
