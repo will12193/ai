@@ -16,7 +16,7 @@ To restore, copy `skills/` and `instructions/` back into `~/.copilot/` and re-ad
 
 | File | Summary |
 |---|---|
-| `general.instructions.md` | Placeholder template for general project context and coding guidelines. Not filled in yet. |
+| `coding-agents.instructions.md` | My personal general-purpose rules for all coding agents (`applyTo: **`). Currently: when waiting on something slow (tests, builds, etc.), tell me in chat that it is waiting, what for, and a rough time estimate. |
 
 ## Skills (`skills/`)
 
