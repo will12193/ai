@@ -35,7 +35,7 @@ Never create, edit, rename or delete anything under `~/.copilot` without telling
 
 ## Record what you learn
 
-At the end of a substantial task, ask yourself whether you learned a rule, pattern or gotcha worth keeping. If it is specific to the repo, record it in that repo's instruction/skill files under its own maintenance rules. If it applies to all repos, follow `maintain-global-agent-config`.
+At the end of a substantial task, ask yourself whether you learned a rule, pattern or gotcha worth keeping. If it is specific to the repo, record it in that repo's instruction/skill files under its own maintenance rules; if the repo has none, offer to bootstrap them via `maintain-authoring-agent-instructions-and-skills` rather than creating files unasked. If it applies to all repos, follow `maintain-global-agent-config`.
 
 ## Maintaining These Files
 

@@ -80,7 +80,20 @@ Every instruction file and skill ends with a maintenance section so knowledge ga
 3. Identify areas that are situational or long; make each a skill with a trigger-rich `description`, companion line and maintenance section.
 4. Cross-check: every skill is in the skill map and maintaining list; no duplicated content; the instruction file still carries (or points to) every essential pattern.
 5. Re-read the instruction file as a fresh agent: can it tell what to load for a given task? Trim anything not needed on most tasks.
-6. For a global change: disclose under `## Global Agent Behaviour Change`, update the ai-hub README and run `sync.sh` (see `maintain-ai-hub-backup-repo`).
+6. For a global change: disclose under `## Global Agent Behaviour Change` and run `sync.sh "<why>"` (see `maintain-ai-hub-backup-repo`).
+
+## 7. Bootstrapping a repo that has no agent files
+
+Trigger: you learned something repo-specific worth recording and the repo has no instruction file or skills.
+
+1. **Do not create files unasked.** Tell the user what you learned and offer to bootstrap the repo's agent files. Repo files get committed to their history, so this is their call.
+2. If they agree, create the **minimal** set in the standard layout:
+   - `.github/instructions/<repo>.instructions.md` with `applyTo: "**"`: identity one-liner, Skills section (may be empty with a note), 3-6 essentials you actually know, and the Maintaining These Files section. Target under 60 lines; it grows later.
+   - A skill under `.github/skills/<repo>-<area>/SKILL.md` **only** if the lesson is clearly situational or long; otherwise record it in the instruction file.
+3. Record the lesson, then stop; don't speculate about conventions you haven't observed.
+4. If the repo already uses another convention (`AGENTS.md`, `CLAUDE.md`, `.github/copilot-instructions.md`), add to that instead of introducing a second layout, and tell the user.
+
+Standard layout for all repos: `.github/instructions/*.instructions.md` and `.github/skills/<name>/SKILL.md`, as in platform-api.
 
 ## Maintaining This Skill File
 
