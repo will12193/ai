@@ -44,6 +44,7 @@ The instruction file **scopes problems**: it tells the agent which skill to load
   6. **Maintaining This Skill File** (last): see section 5.
 - Recipe-style skills (like lint): one entry per *pattern* (not per occurrence), fixed entry format in an HTML comment, sorted, only record fixes that were verified, no file/line references (they go stale), correct wrong entries in place.
 - Keep skills self-contained but link to sibling skills by name rather than copying.
+- **Prompt-style skills are exempt from the body shape.** A skill that is essentially a crafted prompt (e.g. `grilling`) keeps its voice and looseness: no forced title, companion line or maintenance section. Only apply the shape to reference/procedure skills.
 
 ## 4. Where does new content go?
 
