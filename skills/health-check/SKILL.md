@@ -33,6 +33,8 @@ Work out each file's level yourself from its path and content. Use these groups,
 
 For each: file name, one-line summary of what it tells you, and `applyTo` if present. Flag any that look like an unfilled template, are empty, duplicated, or conflict with another.
 
+**Sentinel check.** The global instruction file contains a line starting `Health-check sentinel:` followed by a phrase. Look for that line in your loaded context (not on disk) and print the phrase exactly under the Global group, as `Sentinel: "<phrase>"`. If no such line is in your context, print `Sentinel: not found in context`, which means the global instruction file was not injected. Never guess or reconstruct the phrase.
+
 ### 3. Skills on hand, grouped by level
 Same grouping, from the available-skills list (use each skill's listed location: user/global, repo/project, plugin). One line each: name and a few words on what it's for. For long plugin lists, group by plugin and give a count plus the names, not descriptions.
 

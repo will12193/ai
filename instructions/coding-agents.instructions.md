@@ -6,6 +6,8 @@ description: "William's personal general-purpose rules for all coding agents, pl
 
 Global rules that apply in every repo, alongside whatever instructions the current repo provides. Repo rules win on repo-specific matters.
 
+Health-check sentinel: journey before destination
+
 ## Global skills
 
 Global skills live in `~/.copilot/skills/<name>/SKILL.md`. Load the one that matches the work:
