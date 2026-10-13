@@ -17,7 +17,8 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md` (global rul
 3. Do a first pass over the diff to understand what the changes are actually doing — what files/areas are touched, what kind of change each one is (new feature, refactor, bug fix, config change, dependency bump, etc.), and note anything that looks glaring or immediately suspicious.
 4. Based on that first pass, generate a concrete checklist of potential issues to investigate — informed by the type of each change and how the surrounding (unchanged) code in those areas behaves. Read the surrounding code where needed to understand context before finalizing the checklist. Each checklist item should be specific (e.g. "new endpoint in X does not appear to validate the `id` param before use in a query" rather than "check for injection").
 5. Work through the checklist one item at a time, examining the relevant code for each, and record what you find (issue confirmed, or no issue).
-6. Review the changed code against the criteria below, incorporating the findings from step 5. Only report issues found in the changed code itself — unchanged code you read for context in steps 4-5 is for understanding only, not for reporting.
+6. Assess test coverage: note which tests (if any) were added or changed in the diff, and identify behaviour in the changed code that no test exercises.
+7. Review the changed code against the criteria below, incorporating the findings from steps 5 and 6. Only report issues found in the changed code itself — unchanged code you read for context in steps 4-5 is for understanding only, not for reporting.
 
 ## Review criteria
 
