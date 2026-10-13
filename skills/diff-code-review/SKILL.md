@@ -29,7 +29,8 @@ For each issue found, cite the file and approximate location, explain the concer
 - **Code quality** — readability, duplication, error handling, naming, dead code.
 - **Potential Regressions** — changes that could break existing functionality, including API changes, altered behaviour of existing functions, and changes to data structures.
 - **Best practices** — idiomatic use of the language/framework, consistency with existing patterns in the surrounding code and any repo-level instructions or skills (e.g. `.github/instructions/`, `.github/skills/`).
-- **Other crucial concerns** — anything else important that doesn't fit the above (e.g. breaking changes, missing tests, concurrency bugs).
+- **Missing tests** — recommend specific tests the diff should include but doesn't. Check which test files the diff touches and which existing tests cover the changed code, then list each gap as a concrete test: the behaviour or case to cover (happy path, error/edge cases, boundary values, nil/empty input, authz failures, state transitions, regressions for fixed bugs), the file where it belongs, and a suggested test name. Prioritise gaps by risk, and follow the repo's test conventions (e.g. `.github/skills/` test skills). Only recommend tests for changed code; don't ask for tests on trivial changes (renames, comments, config bumps) unless they alter behaviour.
+- **Other crucial concerns** — anything else important that doesn't fit the above (e.g. breaking changes, concurrency bugs).
 
 If a category has no issues, state "No issues found" under that heading rather than omitting it. Do not comment on line/file counts — focus only on substantive findings. When referencing an issue, include a markdown link to the file and line (or line range).
 
