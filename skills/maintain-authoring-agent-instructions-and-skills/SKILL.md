@@ -101,7 +101,7 @@ Every instruction file and skill ends with a maintenance section so knowledge ga
 
 - **Instruction file** ends with `## Maintaining These Files`: a list mapping *each* section/skill to what belongs there ("`<skill>`: anything about X"), then:
   - **When to add an entry**: spent several tool calls working out an undocumented pattern/command; hit a bug whose cause/fix wasn't obvious; found a convention/helper/env var likely to recur; the user corrected a wrong assumption.
-  - **How**: extend an existing section over adding a new one; short entries (symptom, cause, fix); exact error text; no one-off trivia.
+  - **How**: extend an existing section over adding a new one; short entries (symptom, cause, fix); exact error text; no one-off trivia or inventories the code already holds (section 4a).
 - **Each skill** ends with `## Maintaining This Skill File`: "Update this file (not the instructions files) when you discover <its kinds of things>. Keep entries short: symptom, cause, fix."
 - **Scope strictly.** A file's maintenance rules cover only the files in its own scope. A repo's files maintain that repo's files; the global files maintain only global files. Never edit another scope's files; tell the user instead. Repo maintaining sections must not route anything to the global layer (see section 0).
 - Adding a skill means updating the instruction file's **Skills** list and **Maintaining** list in the same change.
