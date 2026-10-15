@@ -18,7 +18,7 @@ Global skills live in `~/.copilot/skills/<name>/SKILL.md`. Load the one that mat
 - **`gitlab-mr-summary`**: load when asked for an MR/PR description, summary or test plan.
 - **`maintain-global-agent-config`**: load **before** creating, editing, renaming or deleting anything under `~/.copilot` (whichever tool does it), and when I say "always", "never" or "from now on" about something that applies to all repos.
 - **`maintain-ai-hub-backup-repo`**: load after any `~/.copilot` change, or when the ai hub repo / `sync.sh` comes up.
-- **`maintain-authoring-agent-instructions-and-skills`**: load for structure/size/scope decisions on agent files (where content belongs, splitting, trimming, bootstrapping a repo). Use it alongside any built-in customization tooling, which owns file-format mechanics.
+- **`maintain-authoring-agent-instructions-and-skills`**: load **before** creating or editing any instruction file or skill, in any repo or globally, even for a single added entry. It covers what belongs where, body shape, what to record, size budget and the repo boundary. Use it alongside any built-in customization tooling, which owns file-format mechanics.
 - **`align-repo-agent-files`**: load when asked to align, restructure or standardise a repo's instruction files and skills to my conventions (lossless: keeps existing knowledge, applies the structure).
 
 ## Tell me when you are waiting
@@ -37,10 +37,10 @@ Never create, edit, rename or delete anything under `~/.copilot` without telling
 
 ## Record what you learn
 
-At the end of a substantial task, ask yourself whether you learned a rule, pattern or gotcha worth keeping. If it is specific to the repo, record it in that repo's instruction/skill files under its own maintenance rules; if the repo has none, offer to bootstrap them via `maintain-authoring-agent-instructions-and-skills` rather than creating files unasked. If it applies to all repos, follow `maintain-global-agent-config`.
+At the end of a substantial task, ask yourself whether you learned a rule, pattern or gotcha worth keeping. Load `maintain-authoring-agent-instructions-and-skills` first, whichever scope it lands in. If it is specific to the repo, record it in that repo's instruction/skill files under its own maintenance rules; if the repo has none, offer to bootstrap them rather than creating files unasked. If it applies to all repos, also follow `maintain-global-agent-config`.
 
 Repo agent files are shared with other people who do not have this global layer. Write them for the team, in a neutral voice, and never reference `~/.copilot`, the ai hub repo, these global skills, or me by name. My personal preferences go in the global layer, not in repo files.
 
 ## Maintaining These Files
 
-This file and the global skills cover the global scope only (`~/.copilot/instructions/`, `~/.copilot/skills/`); a repo's own files are maintained by that repo's rules. Before changing any global file, load `maintain-global-agent-config`: it says what belongs where and how to disclose and sync. Adding a skill means adding it to the list above in the same change.
+This file and the global skills cover the global scope only (`~/.copilot/instructions/`, `~/.copilot/skills/`); a repo's own files are maintained by that repo's rules. Before changing any global file, load `maintain-authoring-agent-instructions-and-skills` (structure and content) and `maintain-global-agent-config` (what counts as global, disclosure and sync). Adding a skill means adding it to the list above in the same change.
