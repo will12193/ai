@@ -83,6 +83,18 @@ A `*.instructions.md` file with `applyTo` is path-specific in Copilot CLI: it is
 
 Before creating a new skill, check whether an existing one should be extended. Create a new one when the topic is distinct, would be loaded independently, and is likely to recur.
 
+## 4a. What to record: how things work, not inventories
+
+Aim to capture **how the codebase works and its conventions**, not to transcribe it. Don't add one-off specific cases as you meet them.
+
+- **Record the mental model**: the pattern, the rule that governs it, where it lives and how to extend it, plus the gotchas that code alone won't reveal.
+- **Examples are good**, and one or two well-chosen ones per pattern should be used. A complete list of instances is not an example.
+- **Never mirror a list the code already holds** (every error type and code, every enum value, every helper, every route, every config key). It goes stale and costs context on every load. Write one line that says the list exists and where (`internal/claim/error.go`, `errors/code.go`), plus the rule for reading or extending it, and let the agent read the list from code when needed.
+- **Put it in the skill that owns the concept.** Cross-cutting machinery (errors, auth, logging, tests) is documented once in its own skill. Feature or domain skills only say that it applies, note what is specific to them, and link by skill name. If a domain skill is turning into a table of another skill's material, move or drop it.
+- Test before adding an entry: *"Could the agent get this by reading the code once it knows where to look?"* Yes → add the pointer only. *"Is it a convention, a relationship or a trap that reading wouldn't reveal?"* Yes → record it, briefly.
+
+Example. Instead of a table of every claim error with its HTTP status, area and code constant, a domain skill says: "Claim errors and their gate functions are in `internal/claim/error.go`; codes are `Package + Area + Code` (`errors.ConcatCode`) from `internal/errors/code.go`. Derive expected codes from the constants rather than guessing. How errors are raised, wrapped and gated: see `<scope>-errors`."
+
 ## 5. Self-maintaining files
 
 Every instruction file and skill ends with a maintenance section so knowledge gaps get recorded where they belong:
