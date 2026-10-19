@@ -1,5 +1,12 @@
 {
   "mcpServers": {
+    "e2efi-trust": {
+      "type": "http",
+      "url": "http://localhost:8080/mcp",
+      "tools": [
+        "*"
+      ]
+    },
     "gitlab": {
       "type": "local",
       "command": "npx",
