@@ -34,7 +34,7 @@ Commands: `<repo>/sync.sh pull|push ["msg"]`, or on Windows `powershell -NoProfi
 
 ## Sync failures
 
-- `~/.copilot differs from the last commit` → something edited `~/.copilot` directly (or a skill exists there that the repo lacks). The list shows `+` only in `~/.copilot`, `~` modified, `-` missing from `~/.copilot`. Copy anything worth keeping into the repo, then re-run; the mirror overwrites the rest.
+- `~/.copilot differs from the last commit` → something edited `~/.copilot` directly (or a skill exists there that the repo lacks). The list is `diff -rq` output: `Only in <~/.copilot path>` is an extra file there, `Only in <commit path>` is missing from `~/.copilot`, `differ` is modified. Copy anything worth keeping into the repo, then re-run; the mirror overwrites the rest.
 - `The remote has commits that are not in this checkout` (push) → another machine pushed since your last pull. `git stash`, `sync pull`, `git stash pop`, re-run push.
 - `Repo has uncommitted edits in skills/ or instructions/` (pull) → pull refuses with edits pending. Run `sync push` first, or stash.
 - `Possible secret found` → stop, tell the user which file, do not push.

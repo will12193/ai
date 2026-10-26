@@ -22,12 +22,14 @@ check_copilot_matches_head() {
     local tmp changes
     tmp="$(mktemp -d)"
     git archive HEAD skills instructions | tar -x -C "$tmp"
+    # diff compares content only; rsync -c also flags timestamp-only differences on macOS (openrsync),
+    # and git archive stamps files with the commit time.
     changes="$(for d in skills instructions; do
-        rsync -rcn --delete --itemize-changes --exclude='.DS_Store' "$SRC/$d/" "$tmp/$d/"
+        diff -rq -x .DS_Store "$SRC/$d" "$tmp/$d" || true
     done)"
     rm -rf "$tmp"
     if [ -n "$changes" ]; then
-        echo "~/.copilot differs from the last commit (rsync view; edits belong in the repo):" >&2
+        echo "~/.copilot differs from the last commit (left side is ~/.copilot, right is the commit; edits belong in the repo):" >&2
         echo "$changes" >&2
         echo "Copy anything you want to keep into the repo's skills/ or instructions/, then re-run." >&2
         exit 1
