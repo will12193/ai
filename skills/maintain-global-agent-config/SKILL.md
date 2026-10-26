@@ -1,6 +1,6 @@
 ---
 name: maintain-global-agent-config
-description: "Rules for evolving William's GLOBAL agent files in ~/.copilot (instructions/ and skills/): when to add or change a rule or skill, what scope belongs there, and the mandatory disclosure and sync steps. Use when: the user says 'you should always...', 'never...', 'from now on', corrects a wrong assumption or preference that applies to all repos, a knowledge gap or recurring pattern is discovered that is relevant to all coding regardless of repo, or you are about to create/edit/delete any file under ~/.copilot/instructions or ~/.copilot/skills, regardless of which tool or skill makes the edit. This is a policy layer (when/whether to change, disclosure, sync); it does not cover file-format mechanics, which belong to any built-in customization tooling."
+description: "Rules for evolving William's GLOBAL agent files (instructions/ and skills/, sourced from the ai hub repo and mirrored into ~/.copilot): when to add or change a rule or skill, what scope belongs there, and the mandatory pull, disclosure and push steps. Use when: the user says 'you should always...', 'never...', 'from now on', corrects a wrong assumption or preference that applies to all repos, a knowledge gap or recurring pattern is discovered that is relevant to all coding regardless of repo, or you are about to create/edit/delete any file under ~/.copilot/instructions or ~/.copilot/skills, regardless of which tool or skill makes the edit. This is a policy layer (when/whether to change, disclosure, sync); it does not cover file-format mechanics, which belong to any built-in customization tooling."
 ---
 
 # Maintaining the global agent files
@@ -11,7 +11,7 @@ The global files are mirrored into `~/.copilot/instructions/` and `~/.copilot/sk
 
 ## Scope: global only
 
-Only maintain files in `~/.copilot/instructions/` and `~/.copilot/skills/` (including this skill and `coding-agents.instructions.md`).
+Only maintain the global files: `instructions/` and `skills/` in the ai hub repo, which are mirrored into `~/.copilot/instructions/` and `~/.copilot/skills/` (including this skill and `coding-agents.instructions.md`).
 
 - **Never** edit a repo's own instruction or skill files from this skill. If a lesson belongs to one repo, follow that repo's own maintenance rules (or tell the user) instead.
 - **Never** make a repo file reference the global layer. Repo files are shared with teammates who don't have `~/.copilot`; they must stand alone (details in `maintain-authoring-agent-instructions-and-skills`, section 0).

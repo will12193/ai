@@ -53,4 +53,4 @@ Repo agent files are shared with other people who do not have this global layer.
 
 ## Maintaining These Files
 
-This file and the global skills cover the global scope only (`~/.copilot/instructions/`, `~/.copilot/skills/`); a repo's own files are maintained by that repo's rules. Before changing any global file, load `maintain-authoring-agent-instructions-and-skills` (structure and content) and `maintain-global-agent-config` (what counts as global, disclosure and sync). Adding a skill means adding it to the list above in the same change.
+This file and the global skills cover the global scope only (`~/.copilot/instructions/`, `~/.copilot/skills/`); a repo's own files are maintained by that repo's rules. Before changing any global file, load `maintain-authoring-agent-instructions-and-skills` (structure and content), `maintain-global-agent-config` (what counts as global, disclosure) and `maintain-ai-hub-backup-repo` (pull first, edit in the repo, push). Adding a skill means adding it to the list above in the same change.

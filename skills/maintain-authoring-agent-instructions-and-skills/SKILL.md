@@ -7,7 +7,7 @@ description: "William's preferences for how agent instruction files and skills a
 
 Model: **one instruction file orchestrates; skills hold the depth.** This keeps context small and each topic independently maintainable. Reference implementation: `~/dev/platform-api/.github/instructions/platform-api.instructions.md` plus `.github/skills/platform-api-*/`.
 
-For *where* global files live and the disclosure/sync duties when editing `~/.copilot`, see `maintain-global-agent-config`. This skill is about structure and content.
+For *where* global files live and the pull, disclosure and push duties when changing them, see `maintain-global-agent-config` (and `maintain-ai-hub-backup-repo` for the mechanics). This skill is about structure and content.
 
 ## Working alongside built-in tooling
 
@@ -113,7 +113,7 @@ Every instruction file and skill ends with a maintenance section so knowledge ga
 3. Identify areas that are situational or long; make each a skill with a trigger-rich `description`, companion line and maintenance section.
 4. Cross-check: every skill is in the skill map and maintaining list; no duplicated content; the instruction file still carries (or points to) every essential pattern.
 5. Re-read the instruction file as a fresh agent: can it tell what to load for a given task? Trim anything not needed on most tasks.
-6. For a global change: disclose under `## Global Agent Behaviour Change` and run `sync.sh "<why>"` (see `maintain-ai-hub-backup-repo`).
+6. For a global change: `pull` first, make the edit in the ai hub repo (`maintain-ai-hub-backup-repo`; never directly in `~/.copilot`, which is only a mirror), disclose under `## Global Agent Behaviour Change`, then `push "<why>"` with the repo's sync script.
 
 ## 7. Bootstrapping a repo that has no agent files
 
