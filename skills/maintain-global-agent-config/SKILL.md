@@ -56,7 +56,7 @@ List each file touched, what changed (added / modified / removed) and why, in a 
 
 ## Mandatory: sync after every change
 
-After any change to the global files, back up with the `maintain-ai-hub-backup-repo` skill: run `~/dev/ai/sync.sh "<what changed and why>"`, which regenerates the README tables, commits and pushes. Confirm it printed `Backed up.` and mention the sync in the Global Agent Behaviour Change section.
+After any change to the global files, back up with the `maintain-ai-hub-backup-repo` skill: run the hub's sync script with `"<what changed and why>"` (`sync.sh`, or `sync.ps1` on Windows; invocation is in `maintain-ai-hub-backup-repo`), which regenerates the README tables, commits and pushes. Confirm it printed `Backed up.` and mention the sync in the Global Agent Behaviour Change section.
 
 ## Maintaining This Skill File
 

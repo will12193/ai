@@ -20,6 +20,16 @@ Global skills live in `~/.copilot/skills/<name>/SKILL.md`. Load the one that mat
 - **`maintain-ai-hub-backup-repo`**: load after any `~/.copilot` change, or when the ai hub repo / `sync.sh` comes up.
 - **`maintain-authoring-agent-instructions-and-skills`**: load **before** creating or editing any instruction file or skill, in any repo or globally, even for a single added entry. It covers what belongs where, body shape, what to record, size budget and the repo boundary. Use it alongside any built-in customization tooling, which owns file-format mechanics.
 - **`align-repo-agent-files`**: load when asked to align, restructure or standardise a repo's instruction files and skills to my conventions (lossless: keeps existing knowledge, applies the structure).
+- **`windows-home-machine`**: load when setting up or maintaining my Windows home machine (Git, SSH, repo clones, WSL, Docker, storage on C:/F:), or when a Windows-specific shell or path problem comes up on it.
+
+## My Windows home machine
+
+When the OS is Windows (home `C:\Users\willc`):
+
+- Repos live in `C:\Users\willc\Documents\dev` (the ai hub is `...\dev\ai`) and stay on C:. `F:\` is reserved for WSL and Docker storage only.
+- The only shell is Windows PowerShell 5.1: no bash, rsync, pwsh or python. Scripts need `-ExecutionPolicy Bypass`.
+- `git` may not be on PATH: use `C:\Program Files\Git\cmd\git.exe`. GitHub is over SSH (account `will12193`); never ask for a key passphrase in chat.
+- The ai hub sync script here is `sync.ps1` (`sync.sh` on other machines); see `maintain-ai-hub-backup-repo`.
 
 ## Tell me when you are waiting
 
@@ -33,7 +43,7 @@ Keep it to one or two lines. If the wait runs well past your estimate, post a br
 
 ## Global files are change-controlled
 
-Never create, edit, rename or delete anything under `~/.copilot` without telling me. Every such change must be listed under a `## Global Agent Behaviour Change` header at the end of the message and backed up with `~/dev/ai/sync.sh` (see `maintain-ai-hub-backup-repo`). No exceptions.
+Never create, edit, rename or delete anything under `~/.copilot` without telling me. Every such change must be listed under a `## Global Agent Behaviour Change` header at the end of the message and backed up with the ai hub sync script (`sync.sh`, or `sync.ps1` on Windows; see `maintain-ai-hub-backup-repo`). No exceptions.
 
 ## Record what you learn
 
