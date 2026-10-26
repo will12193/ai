@@ -13,7 +13,7 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 - Repositories and source code: `C:\Users\willc\Documents\dev`.
 - Drive `F:\`, named WSL by William, is dedicated to WSL distributions and Docker container storage.
 - Keep repositories on C: unless William explicitly changes this. Explain any WSL bind-mount performance trade-offs before proposing a different location.
-- Personal skills belong under `C:\Users\willc\.copilot\skills\<skill-name>\SKILL.md`.
+- Personal skills load from `C:\Users\willc\.copilot\skills\<skill-name>\SKILL.md`, a mirror of the ai hub repo. Edit them in the repo (see `maintain-ai-hub-backup-repo`), not there.
 
 ## Shell environment (verified 2026-10-27)
 
@@ -28,7 +28,7 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 - Git Credential Manager is installed (`manager` credential helper). Public HTTPS access was verified with `git ls-remote`; private HTTPS access has not been verified.
 - SSH is the preferred protocol for GitHub (account `will12193`). Key: `C:\Users\willc\.ssh\id_ed25519` (ED25519, passphrase-protected, public key registered on GitHub).
 - The Windows `ssh-agent` service is set to Automatic and Git uses Windows OpenSSH via global `core.sshCommand`.
-- The ai hub repo is cloned at `C:\Users\willc\Documents\dev\ai` (`git@github.com:will12193/ai.git`); back up with its `sync.ps1` (see `maintain-ai-hub-backup-repo`).
+- The ai hub repo is cloned at `C:\Users\willc\Documents\dev\ai` (`git@github.com:will12193/ai.git`) and is the source of truth for global skills and instructions; use its `sync.ps1 pull` / `push` (see `maintain-ai-hub-backup-repo`).
 
 ## Workflow
 

@@ -1,17 +1,18 @@
 # ai
 
-My AI hub: a backup of my global Copilot CLI customisation, and the place where the structure for scaling agent knowledge across my repos is defined.
+My AI hub: the source of truth for my global Copilot CLI customisation (skills and instructions), kept identical on every machine, and the place where the structure for scaling agent knowledge across my repos is defined.
 
-`~/.copilot` is the source of truth; this repo is overwritten from it by `sync.sh`. Concrete coding conventions live in each repo's own agent files; the global layer here holds cross-repo behaviours and the rules for how those repo files are structured and maintained.
+This repo is the source of truth; `sync.sh` / `sync.ps1` mirror `skills/` and `instructions/` into `~/.copilot`, where Copilot loads them. Concrete coding conventions live in each repo's own agent files; the global layer here holds cross-repo behaviours and the rules for how those repo files are structured and maintained.
 
 ## How it works
 
-1. Change things in `~/.copilot` (never directly in `skills/`, `instructions/` or `mcp-config.redacted.json` here; `sync.sh` refuses to run if they have uncommitted edits).
-2. Run `./sync.sh "what changed and why"` (macOS/Linux) or, on Windows, `powershell -NoProfile -ExecutionPolicy Bypass -File .\sync.ps1 "what changed and why"`. It pulls, copies the config, regenerates the tables below from each file's frontmatter, scans for secrets, then commits with that message and pushes. With no argument the message is `Backup <date>`.
+1. **Pull before editing:** `./sync.sh pull` (macOS/Linux) or, on Windows, `powershell -NoProfile -ExecutionPolicy Bypass -File .\sync.ps1 pull`. It runs `git pull --ff-only` and mirrors the repo into `~/.copilot`, so this machine has what the other machines pushed.
+2. **Edit in this repo** (`skills/`, `instructions/`), never directly in `~/.copilot`. The scripts refuse to run while `~/.copilot` differs from the last commit and list what differs, so nothing is overwritten silently.
+3. **Push:** `./sync.sh "what changed and why"` or `.\sync.ps1 "what changed and why"` (`push` is the default). It checks the remote has nothing newer, regenerates the tables below from each file's frontmatter, scans for secrets, mirrors the repo into `~/.copilot`, then commits with that message and pushes. With no message it is `Backup <date>`.
 
-The hand-written parts of this README, `sync.sh`, `sync.ps1`, `.gitignore` and `.gitattributes` live only in this repo and are edited here. `sync.ps1` needs only Windows PowerShell 5.1 and Git, converts CRLF to LF on copy, and does not redact `mcp-config.json` (it leaves `mcp-config.redacted.json` alone). Each machine mirrors its own `~/.copilot`, so a skill that exists on only one machine is deleted from the repo when the other machine syncs.
+The hand-written parts of this README, `sync.sh`, `sync.ps1`, `.gitignore` and `.gitattributes` are edited here and never mirrored. `mcp-config.json` is the exception: it holds secrets, lives only in `~/.copilot`, and `sync.sh` generates `mcp-config.redacted.json` from it (`sync.ps1` does not redact; it leaves that file alone). `sync.ps1` needs only Windows PowerShell 5.1 and Git and compares and writes LF line endings.
 
-To restore, copy `skills/` and `instructions/` back into `~/.copilot/` and re-add secrets to `mcp-config.json` by hand.
+Mirroring deletes, so removing a skill here removes it from every machine's `~/.copilot` on its next pull. To set up a new machine, clone this repo and run `pull`, then re-add secrets to `mcp-config.json` by hand.
 
 ## What's in here
 
@@ -31,7 +32,7 @@ To restore, copy `skills/` and `instructions/` back into `~/.copilot/` and re-ad
 | `gitlab-mr-summary` | Generate a GitLab merge request title, summary and manual test plan from the git diff of the current branch against a base branch (default origin/master), then offer to update the branch's existing MR with it. | the user asks for an MR description, MR summary, merge request text, PR description, a test plan for their branch, or to update/refresh the MR. |
 | `grilling` | Grill the user relentlessly about a plan, decision, or idea. Use when the user wants to stress-test their thinking, or uses any 'grill' trigger phrases. |  |
 | `health-check` | Report honestly what the agent currently has in its context: instruction files loaded (grouped by level: global, repo, other), skills available, and relevant session state. | the user says 'health check', 'health-check', '/health-check', 'what do you have loaded', 'what instructions/skills do you have', 'what's in your context', or asks for a status of the session. |
-| `maintain-ai-hub-backup-repo` | Maintain the user's AI hub backup repo (~/dev/ai, GitHub will12193/ai) that mirrors ~/.copilot. | the user asks to add, change, rename or remove any Copilot skill, instruction, or MCP config; mentions the 'ai hub', 'ai repo', 'sync.sh', 'sync.ps1', or backing up Copilot config; or after any edit under ~/.copilot/skills or ~/.copilot/instructions. |
+| `maintain-ai-hub-backup-repo` | Maintain the user's AI hub repo (GitHub will12193/ai), the source of truth for the global skills and instructions that are mirrored into ~/.copilot on every machine. | the user asks to add, change, rename or remove any Copilot skill, instruction, or MCP config; is about to edit anything under ~/.copilot/skills or ~/.copilot/instructions (pull first, edit in the repo); mentions the 'ai hub', 'ai repo', 'sync.sh', 'sync.ps1', or backing up or syncing Copilot config between machines. |
 | `maintain-authoring-agent-instructions-and-skills` | William's preferences for how agent instruction files and skills are structured, sized and scoped: one lean always-loaded instruction file that orchestrates scoped, self-maintaining skills. | about to create or edit any agent file (`*.instructions.md`, `SKILL.md`, `AGENTS.md`, `copilot-instructions.md`), in any repo or globally, including adding a single entry or gotcha; deciding whether content belongs in the instruction file or a skill; splitting, trimming or restructuring agent files; the instruction file is getting long; setting up agent files for a repo that has none; reviewing agent files against these preferences. This is a policy layer: it does not cover file-format mechanics (frontmatter syntax, applyTo globs, debugging why a file isn't loaded), which belong to any built-in customization tooling. Distilled from the platform-api setup. |
 | `maintain-global-agent-config` | Rules for evolving William's GLOBAL agent files in ~/.copilot (instructions/ and skills/): when to add or change a rule or skill, what scope belongs there, and the mandatory disclosure and sync steps. | the user says 'you should always...', 'never...', 'from now on', corrects a wrong assumption or preference that applies to all repos, a knowledge gap or recurring pattern is discovered that is relevant to all coding regardless of repo, or you are about to create/edit/delete any file under ~/.copilot/instructions or ~/.copilot/skills, regardless of which tool or skill makes the edit. This is a policy layer (when/whether to change, disclosure, sync); it does not cover file-format mechanics, which belong to any built-in customization tooling. |
 | `windows-home-machine` | Facts and workflow for William's Windows home development machine: folder and drive layout (repos on C:, F: reserved for WSL and Docker), Git and SSH setup, shell limitations, repo clones, and the planned WSL/Docker setup. | setting up or maintaining that machine, cloning repositories, working out where something lives on C: or F:, configuring WSL, Docker or development storage, or hitting 'The term 'git' is not recognized', 'Permission denied (publickey)', 'running scripts is disabled on this system' or 'Python was not found' on it. |
@@ -40,7 +41,7 @@ To restore, copy `skills/` and `instructions/` back into `~/.copilot/` and re-ad
 ### Other files
 
 - `mcp-config.redacted.json` - MCP server layout with all env/header values redacted.
-- `sync.sh` - copy, regenerate README tables, secret-scan, commit and push (bash).
+- `sync.sh` - `pull` (git pull, mirror into `~/.copilot`) and `push` (README tables, secret scan, mirror, commit, push); bash.
 - `sync.ps1` - the same for Windows PowerShell 5.1.
 
 Session history, databases and logs are deliberately not backed up.

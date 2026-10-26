@@ -10,14 +10,14 @@ Health-check sentinel: journey before destination
 
 ## Global skills
 
-Global skills live in `~/.copilot/skills/<name>/SKILL.md`. Load the one that matches the work:
+Global skills load from `~/.copilot/skills/<name>/SKILL.md`, which is a mirror of the ai hub repo: edit them in the repo, not there (see `maintain-ai-hub-backup-repo`). Load the one that matches the work:
 
 - **`health-check`**: load when asked "health check" / what's loaded / what's in your context.
 - **`grilling`**: load when asked to grill, stress-test or interrogate a plan or idea.
 - **`diff-code-review`**: load when asked to review the branch/diff/changes before an MR.
 - **`gitlab-mr-summary`**: load when asked for an MR/PR description, summary or test plan.
 - **`maintain-global-agent-config`**: load **before** creating, editing, renaming or deleting anything under `~/.copilot` (whichever tool does it), and when I say "always", "never" or "from now on" about something that applies to all repos.
-- **`maintain-ai-hub-backup-repo`**: load after any `~/.copilot` change, or when the ai hub repo / `sync.sh` comes up.
+- **`maintain-ai-hub-backup-repo`**: load **before** editing any skill or instruction (pull first, edit in the repo, push after), after any `~/.copilot` change, or when the ai hub repo / `sync.sh` / `sync.ps1` comes up.
 - **`maintain-authoring-agent-instructions-and-skills`**: load **before** creating or editing any instruction file or skill, in any repo or globally, even for a single added entry. It covers what belongs where, body shape, what to record, size budget and the repo boundary. Use it alongside any built-in customization tooling, which owns file-format mechanics.
 - **`align-repo-agent-files`**: load when asked to align, restructure or standardise a repo's instruction files and skills to my conventions (lossless: keeps existing knowledge, applies the structure).
 - **`windows-home-machine`**: load when setting up or maintaining my Windows home machine (Git, SSH, repo clones, WSL, Docker, storage on C:/F:), or when a Windows-specific shell or path problem comes up on it.
@@ -29,7 +29,7 @@ When the OS is Windows (home `C:\Users\willc`):
 - Repos live in `C:\Users\willc\Documents\dev` (the ai hub is `...\dev\ai`) and stay on C:. `F:\` is reserved for WSL and Docker storage only.
 - The only shell is Windows PowerShell 5.1: no bash, rsync, pwsh or python. Scripts need `-ExecutionPolicy Bypass`.
 - `git` may not be on PATH: use `C:\Program Files\Git\cmd\git.exe`. GitHub is over SSH (account `will12193`); never ask for a key passphrase in chat.
-- The ai hub sync script here is `sync.ps1` (`sync.sh` on other machines); see `maintain-ai-hub-backup-repo`.
+- The ai hub sync script here is `sync.ps1` (`sync.sh` on other machines): `pull` before editing skills or instructions, `push` after; see `maintain-ai-hub-backup-repo`.
 
 ## Tell me when you are waiting
 
@@ -43,7 +43,7 @@ Keep it to one or two lines. If the wait runs well past your estimate, post a br
 
 ## Global files are change-controlled
 
-Never create, edit, rename or delete anything under `~/.copilot` without telling me. Every such change must be listed under a `## Global Agent Behaviour Change` header at the end of the message and backed up with the ai hub sync script (`sync.sh`, or `sync.ps1` on Windows; see `maintain-ai-hub-backup-repo`). No exceptions.
+Never create, edit, rename or delete anything under `~/.copilot` without telling me. Every such change must be listed under a `## Global Agent Behaviour Change` header at the end of the message. Make the edit in the ai hub repo after a `pull`, then `push` with its sync script (`sync.sh`, or `sync.ps1` on Windows), which mirrors it into `~/.copilot` (see `maintain-ai-hub-backup-repo`). No exceptions.
 
 ## Record what you learn
 

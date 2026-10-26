@@ -1,16 +1,28 @@
-# Windows counterpart of sync.sh. Copies shareable Copilot config from ~/.copilot into
-# this repo, regenerates the README tables, then commits and pushes.
-# Usage: powershell -NoProfile -ExecutionPolicy Bypass -File .\sync.ps1 ["commit message describing what changed and why"]
-# Never copies session history, databases, logs or unredacted MCP config.
-# Needs only Windows PowerShell 5.1 and Git (no bash, rsync or python).
-param([string]$Message)
+# Windows counterpart of sync.sh. Keeps ~/.copilot identical on every machine through this
+# repo. The repo is the source of truth for skills/ and instructions/: edit them HERE,
+# never in ~/.copilot.
+# Usage (from any directory):
+#   powershell -NoProfile -ExecutionPolicy Bypass -File sync.ps1 pull                 git pull, then mirror the repo into ~/.copilot. Run BEFORE editing.
+#   powershell -NoProfile -ExecutionPolicy Bypass -File sync.ps1 [push] ["message"]   mirror the repo into ~/.copilot, regenerate README tables, commit and push.
+# MCP config is the exception: secrets live only in ~/.copilot/mcp-config.json, and sync.ps1
+# does not redact it (mcp-config.redacted.json is left alone). Never copies session history,
+# databases or logs. Needs only Windows PowerShell 5.1 and Git (no bash, rsync or python).
 
 $ErrorActionPreference = 'Stop'
 
 $Src = Join-Path $env:USERPROFILE '.copilot'
 $Dest = $PSScriptRoot
-if (-not $Message) { $Message = 'Backup ' + (Get-Date -Format 'yyyy-MM-dd HH:mm') }
 $Utf8 = New-Object System.Text.UTF8Encoding($false)
+
+$Command = 'push'
+$rest = @($args)
+if ($rest.Count -gt 0 -and ($rest[0] -eq 'pull' -or $rest[0] -eq 'push')) {
+    $Command = $rest[0]
+    $rest = @($rest | Select-Object -Skip 1)
+}
+$Message = $null
+if ($rest.Count -gt 0) { $Message = [string]$rest[0] }
+if (-not $Message) { $Message = 'Backup ' + (Get-Date -Format 'yyyy-MM-dd HH:mm') }
 
 function Fail($text) {
     [Console]::Error.WriteLine($text)
@@ -28,56 +40,132 @@ function Invoke-Git {
 }
 
 Set-Location $Dest
+foreach ($d in 'skills', 'instructions') { New-Item -ItemType Directory -Force -Path (Join-Path $Src $d) | Out-Null }
 
-# Synced paths are overwritten below; refuse to destroy edits made in the repo by mistake.
-$dirty = & $Git status --porcelain -- skills instructions mcp-config.redacted.json
-if ($dirty) {
-    [Console]::Error.WriteLine('Repo has uncommitted changes in synced paths (~/.copilot is the source of truth):')
-    $dirty | ForEach-Object { [Console]::Error.WriteLine($_) }
-    Fail 'Port them into ~/.copilot or discard them (git checkout -- <path>), then re-run.'
-}
-
-# Another machine may have pushed; sync from an up-to-date checkout.
-Invoke-Git pull -q --ff-only
-
-# The repo stores LF; ~/.copilot files on Windows are CRLF, so normalise text files on copy.
-function Copy-Normalised($from, $to) {
-    $bytes = [IO.File]::ReadAllBytes($from)
-    if ([Array]::IndexOf($bytes, [byte]0) -lt 0) {
-        $list = New-Object 'System.Collections.Generic.List[byte]' $bytes.Length
-        for ($i = 0; $i -lt $bytes.Length; $i++) {
-            if ($bytes[$i] -eq 13 -and ($i + 1) -lt $bytes.Length -and $bytes[$i + 1] -eq 10) { continue }
-            $list.Add($bytes[$i])
-        }
-        $bytes = $list.ToArray()
+# Text is compared and written with LF line endings: the repo stores LF, while ~/.copilot
+# files created on Windows may be CRLF.
+function Get-NormalisedBytes($path) {
+    $bytes = [IO.File]::ReadAllBytes($path)
+    if ([Array]::IndexOf($bytes, [byte]0) -ge 0) { return , $bytes }
+    $list = New-Object 'System.Collections.Generic.List[byte]' $bytes.Length
+    for ($i = 0; $i -lt $bytes.Length; $i++) {
+        if ($bytes[$i] -eq 13 -and ($i + 1) -lt $bytes.Length -and $bytes[$i + 1] -eq 10) { continue }
+        $list.Add($bytes[$i])
     }
-    [IO.File]::WriteAllBytes($to, $bytes)
+    return , $list.ToArray()
 }
 
-# Mirror $src into $dst, deleting anything in $dst that is not in $src (like rsync --delete).
-function Sync-Tree($src, $dst) {
+function Get-Hash($bytes) {
+    $sha = [System.Security.Cryptography.SHA1]::Create()
+    return [BitConverter]::ToString($sha.ComputeHash($bytes))
+}
+
+# Lists what mirroring $src into $dst would do (like rsync --delete -n): '+ file', '~ file', '- file'.
+function Get-TreeChanges($src, $dst) {
+    $changes = New-Object 'System.Collections.Generic.List[string]'
     $srcRoot = (Resolve-Path -LiteralPath $src).Path.TrimEnd('\')
-    New-Item -ItemType Directory -Force -Path $dst | Out-Null
-    $keep = @{}
+    $dstRoot = $dst.TrimEnd('\')
+    $seen = @{}
     Get-ChildItem -LiteralPath $srcRoot -Recurse -File -Force |
         Where-Object { $_.Name -ne '.DS_Store' } |
         ForEach-Object {
-            $target = Join-Path $dst $_.FullName.Substring($srcRoot.Length + 1)
-            New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
-            Copy-Normalised $_.FullName $target
-            $keep[$target.ToLowerInvariant()] = $true
+            $rel = $_.FullName.Substring($srcRoot.Length + 1)
+            $seen[$rel.ToLowerInvariant()] = $true
+            $target = Join-Path $dstRoot $rel
+            if (-not (Test-Path -LiteralPath $target)) {
+                $changes.Add("+ $rel")
+            } elseif ((Get-Hash (Get-NormalisedBytes $_.FullName)) -ne (Get-Hash (Get-NormalisedBytes $target))) {
+                $changes.Add("~ $rel")
+            }
         }
-    Get-ChildItem -LiteralPath $dst -Recurse -File -Force |
-        Where-Object { -not $keep.ContainsKey($_.FullName.ToLowerInvariant()) } |
-        Remove-Item -Force
+    if (Test-Path -LiteralPath $dstRoot) {
+        Get-ChildItem -LiteralPath $dstRoot -Recurse -File -Force |
+            Where-Object { $_.Name -ne '.DS_Store' } |
+            ForEach-Object {
+                $rel = $_.FullName.Substring($dstRoot.Length + 1)
+                if (-not $seen.ContainsKey($rel.ToLowerInvariant())) { $changes.Add("- $rel") }
+            }
+    }
+    return , $changes.ToArray()
+}
+
+function Add-Prefix($prefix, $changes) {
+    return @($changes | ForEach-Object { $_.Substring(0, 2) + $prefix + $_.Substring(2).Replace('\', '/') })
+}
+
+# Mirrors $src into $dst, deleting anything in $dst that is not in $src (like rsync --delete).
+function Sync-Tree($src, $dst) {
+    $srcRoot = (Resolve-Path -LiteralPath $src).Path.TrimEnd('\')
+    New-Item -ItemType Directory -Force -Path $dst | Out-Null
+    foreach ($change in (Get-TreeChanges $src $dst)) {
+        $rel = $change.Substring(2)
+        $target = Join-Path $dst $rel
+        if ($change.StartsWith('-')) {
+            Remove-Item -LiteralPath $target -Force
+        } else {
+            New-Item -ItemType Directory -Force -Path (Split-Path $target) | Out-Null
+            [IO.File]::WriteAllBytes($target, (Get-NormalisedBytes (Join-Path $srcRoot $rel)))
+        }
+    }
     Get-ChildItem -LiteralPath $dst -Recurse -Directory -Force |
         Sort-Object { $_.FullName.Length } -Descending |
         Where-Object { -not (Get-ChildItem -LiteralPath $_.FullName -Force) } |
         Remove-Item
 }
 
-Sync-Tree (Join-Path $Src 'skills') (Join-Path $Dest 'skills')
-Sync-Tree (Join-Path $Src 'instructions') (Join-Path $Dest 'instructions')
+function Sync-IntoCopilot {
+    $applied = @()
+    foreach ($d in 'skills', 'instructions') {
+        $applied += Add-Prefix "$d/" (Get-TreeChanges (Join-Path $Dest $d) (Join-Path $Src $d))
+        Sync-Tree (Join-Path $Dest $d) (Join-Path $Src $d)
+    }
+    return , $applied
+}
+
+# Mirroring overwrites ~/.copilot, so refuse if it holds edits that are not in the last commit.
+function Assert-CopilotMatchesHead {
+    $tmp = Join-Path $env:TEMP ('sync-head-' + [guid]::NewGuid().ToString('N'))
+    $zip = "$tmp.zip"
+    $changes = @()
+    try {
+        Invoke-Git archive --format=zip -o $zip HEAD skills instructions
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        [IO.Compression.ZipFile]::ExtractToDirectory($zip, $tmp)
+        foreach ($d in 'skills', 'instructions') {
+            $changes += Add-Prefix "$d/" (Get-TreeChanges (Join-Path $Src $d) (Join-Path $tmp $d))
+        }
+    } finally {
+        Remove-Item -LiteralPath $zip, $tmp -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    if ($changes.Count -gt 0) {
+        [Console]::Error.WriteLine('~/.copilot differs from the last commit (+ only in ~/.copilot, ~ modified, - missing from ~/.copilot; edits belong in the repo):')
+        $changes | ForEach-Object { [Console]::Error.WriteLine($_) }
+        Fail "Copy anything you want to keep into the repo's skills/ or instructions/, then re-run."
+    }
+}
+
+if ($Command -eq 'pull') {
+    if (& $Git status --porcelain -- skills instructions) {
+        Fail "Repo has uncommitted edits in skills/ or instructions/. Run 'sync.ps1 push' first."
+    }
+    Assert-CopilotMatchesHead
+    Invoke-Git pull -q --ff-only
+    $applied = Sync-IntoCopilot
+    if ($applied.Count -eq 0) {
+        Write-Host 'Already up to date.'
+    } else {
+        $applied | ForEach-Object { Write-Host $_ }
+        Write-Host 'Pulled.'
+    }
+    exit 0
+}
+
+# Pushing over a newer remote would silently drop the other machine's changes.
+Invoke-Git fetch -q
+if ((& $Git rev-list --count 'HEAD..@{u}') -ne '0') {
+    Fail "The remote has commits that are not in this checkout.`nRun 'git stash', 'sync.ps1 pull', 'git stash pop', then re-run."
+}
+Assert-CopilotMatchesHead
 
 # sync.sh blanks every env/header value in mcp-config.json. Re-serialising JSON here would
 # change formatting and escaping, so redaction is not implemented: skip rather than risk a secret.
@@ -154,12 +242,15 @@ if ($hits) {
     Fail 'Possible secret found in the files above; aborting.'
 }
 
+[void](Sync-IntoCopilot)
+
 Invoke-Git add -A
 & $Git diff --cached --quiet
-if ($LASTEXITCODE -eq 0) {
+if ($LASTEXITCODE -ne 0) { Invoke-Git commit -q -m $Message }
+# Also covers a previous run that committed but failed to push.
+if ((& $Git rev-list --count '@{u}..HEAD') -eq '0') {
     Write-Host 'No changes to back up.'
     exit 0
 }
-Invoke-Git commit -q -m $Message
 Invoke-Git push -q origin HEAD
 Write-Host 'Backed up.'

@@ -1,28 +1,73 @@
 #!/usr/bin/env bash
-# Copies shareable Copilot config from ~/.copilot into this repo, regenerates the
-# README tables, then commits and pushes.
-# Usage: ./sync.sh ["commit message describing what changed and why"]
-# Never copies session history, databases, logs or unredacted MCP config.
+# Keeps ~/.copilot identical on every machine through this repo. The repo is the source of
+# truth for skills/ and instructions/: edit them HERE, never in ~/.copilot.
+# Usage:
+#   ./sync.sh pull                  git pull, then mirror the repo into ~/.copilot. Run BEFORE editing.
+#   ./sync.sh [push] ["message"]    mirror the repo into ~/.copilot, regenerate README tables, commit and push.
+# MCP config is the exception: secrets live only in ~/.copilot/mcp-config.json, and a redacted
+# copy is generated into the repo. Never copies session history, databases or logs.
 set -euo pipefail
 
 SRC="$HOME/.copilot"
 DEST="$(cd "$(dirname "$0")" && pwd)"
+CMD="push"
+case "${1:-}" in pull|push) CMD="$1"; shift ;; esac
 MSG="${1:-Backup $(date +%F\ %H:%M)}"
 
 cd "$DEST"
+mkdir -p "$SRC/skills" "$SRC/instructions"
 
-# Synced paths are overwritten below; refuse to destroy edits made in the repo by mistake.
-if [ -n "$(git status --porcelain -- skills instructions mcp-config.redacted.json)" ]; then
-    echo "Repo has uncommitted changes in synced paths (~/.copilot is the source of truth):" >&2
-    git status --short -- skills instructions mcp-config.redacted.json >&2
-    echo "Port them into ~/.copilot or discard them (git checkout -- <path>), then re-run." >&2
-    exit 1
+# Mirroring overwrites ~/.copilot, so refuse if it holds edits that are not in the last commit.
+check_copilot_matches_head() {
+    local tmp changes
+    tmp="$(mktemp -d)"
+    git archive HEAD skills instructions | tar -x -C "$tmp"
+    changes="$(for d in skills instructions; do
+        rsync -rcn --delete --itemize-changes --exclude='.DS_Store' "$SRC/$d/" "$tmp/$d/"
+    done)"
+    rm -rf "$tmp"
+    if [ -n "$changes" ]; then
+        echo "~/.copilot differs from the last commit (rsync view; edits belong in the repo):" >&2
+        echo "$changes" >&2
+        echo "Copy anything you want to keep into the repo's skills/ or instructions/, then re-run." >&2
+        exit 1
+    fi
+}
+
+mirror_into_copilot() {
+    for d in skills instructions; do
+        rsync -a --delete --itemize-changes --exclude='.DS_Store' "$DEST/$d/" "$SRC/$d/"
+    done
+}
+
+if [ "$CMD" = "pull" ]; then
+    if [ -n "$(git status --porcelain -- skills instructions)" ]; then
+        echo "Repo has uncommitted edits in skills/ or instructions/. Run './sync.sh push' first." >&2
+        exit 1
+    fi
+    check_copilot_matches_head
+    git pull -q --ff-only
+    applied="$(mirror_into_copilot)"
+    if [ -z "$applied" ]; then
+        echo "Already up to date."
+    else
+        echo "$applied"
+        echo "Pulled."
+    fi
+    exit 0
 fi
 
-rsync -a --delete --exclude='.DS_Store' "$SRC/skills/" "$DEST/skills/"
-rsync -a --delete --exclude='.DS_Store' "$SRC/instructions/" "$DEST/instructions/"
+# Pushing over a newer remote would silently drop the other machine's changes.
+git fetch -q
+if [ "$(git rev-list --count 'HEAD..@{u}')" != "0" ]; then
+    echo "The remote has commits that are not in this checkout." >&2
+    echo "Run 'git stash', './sync.sh pull', 'git stash pop', then re-run." >&2
+    exit 1
+fi
+check_copilot_matches_head
 
 # Keep MCP server layout but blank every env value, since they hold tokens.
+if [ -f "$SRC/mcp-config.json" ]; then
 python3 - "$SRC/mcp-config.json" "$DEST/mcp-config.redacted.json" <<'PY'
 import json, sys
 with open(sys.argv[1]) as f:
@@ -36,6 +81,7 @@ with open(sys.argv[2], "w") as f:
     json.dump(cfg, f, indent=2)
     f.write("\n")
 PY
+fi
 
 # Regenerate the README tables between the GENERATED markers from each file's frontmatter.
 python3 - "$DEST" <<'PY'
@@ -84,16 +130,21 @@ _, post = rest.split(end, 1)
 open(readme, "w").write(pre + begin + "\n" + "\n".join(out) + "\n" + end + post)
 PY
 
-if grep -rIlE 'glpat-|ghp_|github_pat_|AKIA[0-9A-Z]{16}|BEGIN (RSA|OPENSSH|PRIVATE)' --exclude-dir=.git --exclude=sync.sh .; then
+if grep -rIlE 'glpat-|ghp_|github_pat_|AKIA[0-9A-Z]{16}|BEGIN (RSA|OPENSSH|PRIVATE)' --exclude-dir=.git --exclude=sync.sh --exclude=sync.ps1 .; then
     echo "Possible secret found in the files above; aborting." >&2
     exit 1
 fi
 
+mirror_into_copilot >/dev/null
+
 git add -A
-if git diff --cached --quiet; then
+if ! git diff --cached --quiet; then
+    git commit -q -m "$MSG"
+fi
+# Also covers a previous run that committed but failed to push.
+if [ "$(git rev-list --count '@{u}..HEAD')" = "0" ]; then
     echo "No changes to back up."
     exit 0
 fi
-git commit -q -m "$MSG"
 git push -q origin HEAD
 echo "Backed up."

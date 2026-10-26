@@ -7,7 +7,7 @@ description: "Rules for evolving William's GLOBAL agent files in ~/.copilot (ins
 
 Companion to `~/.copilot/instructions/coding-agents.instructions.md` (global rules and skill map); this file covers *when and whether* to change a global file and the duties that follow. Structure and sizing rules are in `maintain-authoring-agent-instructions-and-skills`; the backup/sync mechanics are in `maintain-ai-hub-backup-repo`.
 
-The global files live in `~/.copilot/instructions/` and `~/.copilot/skills/`. They are loaded alongside repo-specific instruction and skill files (e.g. a project's own `copilot-instructions.md` or `platform-api-*` skills). They should evolve as knowledge gaps and preferences are discovered, so the next session doesn't have to rediscover them.
+The global files are mirrored into `~/.copilot/instructions/` and `~/.copilot/skills/`, which is where they are loaded from, but their source of truth is the ai hub repo: **edit them in the repo, never directly in `~/.copilot`** (the sync script refuses to run over direct edits). Pull before editing and push after; see "Mandatory: pull before, push after" below and `maintain-ai-hub-backup-repo`. They are loaded alongside repo-specific instruction and skill files (e.g. a project's own `copilot-instructions.md` or `platform-api-*` skills). They should evolve as knowledge gaps and preferences are discovered, so the next session doesn't have to rediscover them.
 
 ## Scope: global only
 
@@ -24,7 +24,7 @@ Only maintain files in `~/.copilot/instructions/` and `~/.copilot/skills/` (incl
 - A new or existing skill under `skills/`: anything procedural, situational or long. Prefer a skill over growing the always-loaded instructions.
 - Maintenance rules like these belong in this skill, not in the instructions.
 - For how to structure, size and scope instruction files and skills (lean always-loaded instructions that orchestrate scoped skills), load `maintain-authoring-agent-instructions-and-skills`.
-- `~/.copilot/mcp-config.json`: only change when asked.
+- `~/.copilot/mcp-config.json`: only change when asked. It is the one global file edited in place (it holds secrets and is never mirrored).
 
 ## When to add an entry
 
@@ -54,9 +54,9 @@ At the **end** of the final message of the turn, add a section with this header:
 
 List each file touched, what changed (added / modified / removed) and why, in a line or two each. If the turn changed nothing global, omit the section.
 
-## Mandatory: sync after every change
+## Mandatory: pull before, push after
 
-After any change to the global files, back up with the `maintain-ai-hub-backup-repo` skill: run the hub's sync script with `"<what changed and why>"` (`sync.sh`, or `sync.ps1` on Windows; invocation is in `maintain-ai-hub-backup-repo`), which regenerates the README tables, commits and pushes. Confirm it printed `Backed up.` and mention the sync in the Global Agent Behaviour Change section.
+Before editing any global file, run `sync pull` (see `maintain-ai-hub-backup-repo`) so this machine has the other machines' changes, then make the edit in the hub repo. After any change to the global files, run the hub's sync script with `push "<what changed and why>"` (`sync.sh`, or `sync.ps1` on Windows; invocation is in `maintain-ai-hub-backup-repo`), which regenerates the README tables, mirrors the repo into `~/.copilot`, commits and pushes. Confirm it printed `Backed up.` and mention the sync in the Global Agent Behaviour Change section.
 
 ## Maintaining This Skill File
 
