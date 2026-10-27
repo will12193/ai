@@ -12,7 +12,8 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 - Windows account home: `C:\Users\willc`.
 - Drive `F:\`, named WSL by William, is dedicated to WSL distributions and Docker container storage.
 - **Development lives in WSL, not on Windows.** Go, Node and other toolchains are installed in WSL, and most things run and compile there. Do not install dev tools, runtimes or language toolchains directly on Windows; install them in WSL instead. Windows keeps only what it needs to host things (Git, VS Code, the WSL feature, the ssh-agent).
-- **Existing repos stay on C:.** `C:\Users\willc\Documents\dev` is left as it is (William's decision, 2026-10-27), including the ai hub at `C:\Users\willc\Documents\dev\ai`, which must stay there because `sync.ps1` runs on Windows and mirrors into the Windows `~/.copilot`. Nothing is migrated.
+- **Windows is a host, not a development machine** (William, 2026-10-27). It keeps only VS Code (with its extensions, including Remote-WSL and the Docker extension) and the ai hub clone, so the setup can be maintained or fixed later. Do not develop, build or install toolchains on it.
+- **Existing repos stay on C:.** `C:\Users\willc\Documents\dev` (currently `ai`, `clutter`, `tmp`) is left as it is, including the ai hub at `C:\Users\willc\Documents\dev\ai`, which must stay there because `sync.ps1` runs on Windows and mirrors into the Windows `~/.copilot`. Nothing is migrated.
 - **New projects and repos live in a new `~/dev` inside WSL**, on the Linux filesystem (not under `/mnt/c`, which is slow for builds and file watching).
 - Personal skills load from `C:\Users\willc\.copilot\skills\<skill-name>\SKILL.md`, a mirror of the ai hub repo. Edit them in the repo (see `maintain-ai-hub-backup-repo`), not there.
 

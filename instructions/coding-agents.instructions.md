@@ -28,7 +28,7 @@ When the OS is Windows (home `C:\Users\willc`):
 
 - Development happens in WSL (Ubuntu LTS on `F:\`, which is reserved for WSL and Docker storage): Go, Node, builds and tooling run there, and Docker is Docker Engine inside WSL. Do not install dev tools on Windows; install them in WSL.
 - The existing `C:\Users\willc\Documents\dev` folder stays where it is on C: (William's decision, 2026-10-27), including the ai hub at `...\dev\ai`; nothing is migrated. All **new** projects and repos live in a new `~/dev` inside WSL, on the Linux filesystem (not under `/mnt/c`, which is slow).
-- Existing C: repos are still edited from Windows; the ai hub's `sync.ps1` keeps running on Windows.
+- Windows is a host, not a development machine (William, 2026-10-27): no development happens on it. It keeps VS Code with its extensions and the ai hub clone (`sync.ps1`) only so things can be fixed later; the old C: dev folder stays as is.
 - The Windows shell is PowerShell 5.1: no bash, rsync, pwsh or python. Scripts need `-ExecutionPolicy Bypass`.
 - `git` may not be on PATH: use `C:\Program Files\Git\cmd\git.exe`. GitHub is over SSH (account `will12193`); never ask for a key passphrase in chat.
 - The ai hub sync script here is `sync.ps1` for the Windows clone (`sync.sh` on other machines and inside WSL, from the `~/dev/ai` clone): `pull` before editing skills or instructions, `push` after; see `maintain-ai-hub-backup-repo`.
