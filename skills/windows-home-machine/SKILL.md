@@ -43,6 +43,7 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 
 ## Gotchas
 
+- `wsl` commands (even `wsl --list` and `wsl --shutdown`) hang forever, and the first interactive `wsl -d <distro>` shows a blank window → `WslService` is wedged (seen on the first launch of a freshly installed distro, 2026-10-27); `Restart-Service` stays in `StopPending` → from an elevated prompt, `Stop-Process -Id <wslservice PID> -Force` (the service restarts cleanly), then retry. Test responsiveness from the agent shell with `Start-Job` plus `Wait-Job -Timeout` so a hang does not block the session.
 - `wsl` output is UTF-16, so captured text shows spaces between letters (`T h e   W i n d o w s`) → strip NUL characters (`-replace "`0",""`) before reading it.
 - Admin-only steps (enabling Windows features) cannot run from the agent's non-elevated shell → `Start-Process cmd.exe -Verb RunAs -Wait` with output redirected to a temp log; this raises a UAC prompt William must accept.
 - `The term 'git' is not recognized` → shell started before Git's PATH entry existed → use the absolute path or restart the terminal.
