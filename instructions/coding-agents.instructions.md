@@ -20,18 +20,11 @@ Global skills load from `~/.copilot/skills/<name>/SKILL.md`, which is a mirror o
 - **`maintain-ai-hub-backup-repo`**: load **before** editing any skill or instruction (pull first, edit in the repo, push after), after any `~/.copilot` change, or when the ai hub repo / `sync.sh` / `sync.ps1` comes up.
 - **`maintain-authoring-agent-instructions-and-skills`**: load **before** creating or editing any instruction file or skill, in any repo or globally, even for a single added entry. It covers what belongs where, body shape, what to record, size budget and the repo boundary. Use it alongside any built-in customization tooling, which owns file-format mechanics.
 - **`align-repo-agent-files`**: load when asked to align, restructure or standardise a repo's instruction files and skills to my conventions (lossless: keeps existing knowledge, applies the structure).
-- **`windows-home-machine`**: load when setting up or maintaining my Windows home machine (Git, SSH, repo clones, WSL, Docker, storage on C:/F:, where new repos live), or when a Windows-specific shell or path problem comes up on it.
+- **`windows-home-machine`**: load only when configuring or maintaining my Windows home development environment itself (WSL, Docker, drive storage, Windows Git/SSH, system-level tool installs), or on a Windows-specific shell/path error there. Not for normal development inside WSL.
 
 ## My Windows home machine
 
-When the OS is Windows (home `C:\Users\willc`):
-
-- Development happens in WSL (Ubuntu LTS on `F:\`, which is reserved for WSL and Docker storage): Go, Node, builds and tooling run there, and Docker is Docker Engine inside WSL. Do not install dev tools on Windows; install them in WSL.
-- The existing `C:\Users\willc\Documents\dev` folder stays where it is on C: (William's decision, 2026-10-27), including the ai hub at `...\dev\ai`; nothing is migrated. All **new** projects and repos live in a new `~/dev` inside WSL, on the Linux filesystem (not under `/mnt/c`, which is slow).
-- Windows is a host, not a development machine (William, 2026-10-27): no development happens on it. It keeps VS Code with its extensions and the ai hub clone (`sync.ps1`) only so things can be fixed later; the old C: dev folder stays as is.
-- The Windows shell is PowerShell 5.1: no bash, rsync, pwsh or python. Scripts need `-ExecutionPolicy Bypass`.
-- `git` may not be on PATH: use `C:\Program Files\Git\cmd\git.exe`. GitHub is over SSH (account `will12193`); never ask for a key passphrase in chat.
-- The ai hub sync script here is `sync.ps1` for the Windows clone (`sync.sh` on other machines and inside WSL, from the `~/dev/ai` clone): `pull` before editing skills or instructions, `push` after; see `maintain-ai-hub-backup-repo`.
+When the OS is Windows (home `C:\Users\willc`): all development activity (editing and running code, builds, tests, installs, git work in repos, new repos in `~/dev`) happens inside WSL, never directly on Windows, which is only a host. Work on Windows directly only when actively working on the environment itself; for that, load `windows-home-machine`.
 
 ## Tell me when you are waiting
 

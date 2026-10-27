@@ -1,18 +1,22 @@
 ---
 name: windows-home-machine
-description: "Facts and workflow for William's Windows home development machine: development happens in WSL (Ubuntu LTS on F:) with Docker Engine, nothing dev-related is installed on Windows, new repos live in ~/dev in WSL while the existing C: dev folder stays, plus Git and SSH setup, shell limitations and the WSL/Docker plan. Use when: setting up or maintaining that machine, installing any tool (Go, Node, Python, Docker), cloning repositories, working out where repos or storage live (C: vs F: vs WSL), configuring WSL, Docker or development storage, or hitting 'The term 'git' is not recognized', 'Permission denied (publickey)', 'running scripts is disabled on this system' or 'Python was not found' on it."
+description: "Facts and workflow for configuring and maintaining William's Windows home development environment itself: WSL (Ubuntu LTS on F:), Docker Engine, drive/storage layout, system-level toolchains in WSL (nvm, Go), Git and SSH setup, the ai hub clones, Windows shell limitations. Not for normal development inside WSL (building, testing, running or editing project code, per-project package installs, git work in a repo), which needs none of this. Use when: setting up, changing, repairing or documenting WSL, Docker, drive storage (C: vs F: vs WSL), Windows-side Git/SSH/ssh-agent, system-level tool installs on that machine, or hitting 'The term 'git' is not recognized', 'Permission denied (publickey)', 'running scripts is disabled on this system', 'Python was not found' or a wsl.exe error on it."
 ---
 
 # Windows home development machine
 
-Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carries the short machine essentials (paths, shell, sync script); this file covers the setup state, Git/SSH details, gotchas and the WSL/Docker plan in depth. This is a personal, cross-repository skill: do not copy machine-specific preferences into shared repositories unless asked.
+Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carries the one always-on rule (all development happens in WSL, never directly on Windows); this file covers everything else about the machine: setup state, Git/SSH details, gotchas and the WSL/Docker setup in depth. Load it only when working on the environment itself; routine development inside WSL does not need it. This is a personal, cross-repository skill: do not copy machine-specific preferences into shared repositories unless asked.
+
+## The rule: develop in WSL, touch Windows only to maintain the environment
+
+- **All development activity happens inside WSL**: editing and running project code, builds, tests, package installs, git work in repos, scripts, Docker containers. Do it from a WSL shell or a VS Code window connected to WSL, in `~/dev`. Never do it directly on the Windows side (PowerShell, `C:` or `/mnt/c` paths).
+- **The only exception is actively working on the environment itself**: configuring WSL or Docker, drive/storage layout, Windows Git/SSH/ssh-agent, VS Code and terminal settings, or the Windows ai hub clone (`sync.ps1`). Do that Windows-side work only as far as the environment task needs, then go back to WSL.
 
 ## Scope and storage
 
 - Windows account home: `C:\Users\willc`.
 - Drive `F:\`, named WSL by William, is dedicated to WSL distributions and Docker container storage.
-- **Development lives in WSL, not on Windows.** Go, Node and other toolchains are installed in WSL, and most things run and compile there. Do not install dev tools, runtimes or language toolchains directly on Windows; install them in WSL instead. Windows keeps only what it needs to host things (Git, VS Code, the WSL feature, the ssh-agent).
-- **Windows is a host, not a development machine** (William, 2026-10-27). It keeps only VS Code (with its extensions, including Remote-WSL and the Docker extension) and the ai hub clone, so the setup can be maintained or fixed later. Do not develop, build or install toolchains on it.
+- **Windows is a host, not a development machine** (William, 2026-10-27). It keeps only what it needs to host things: the WSL feature, Git, the ssh-agent, VS Code (with its extensions, including Remote-WSL and the Docker extension) and the ai hub clone, so the setup can be maintained or fixed later. Go, Node and other toolchains are installed in WSL, never as dev tools on Windows.
 - **Existing repos stay on C:.** `C:\Users\willc\Documents\dev` (currently `ai`, `clutter`, `tmp`) is left as it is, including the ai hub at `C:\Users\willc\Documents\dev\ai`, which must stay there because `sync.ps1` runs on Windows and mirrors into the Windows `~/.copilot`. Nothing is migrated.
 - **New projects and repos live in a new `~/dev` inside WSL**, on the Linux filesystem (not under `/mnt/c`, which is slow for builds and file watching).
 - Personal skills load from `C:\Users\willc\.copilot\skills\<skill-name>\SKILL.md`, a mirror of the ai hub repo. Edit them in the repo (see `maintain-ai-hub-backup-repo`), not there.
