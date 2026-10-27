@@ -77,6 +77,8 @@ ai hub in WSL (2026-10-27): a second clone at `~/dev/ai` (`git@github.com:will12
 
 SSH key passphrase: the WSL ssh-agent holds the key in memory only, so run `ssh-add` once in an Ubuntu terminal (William types the passphrase; never in chat) after each WSL start, i.e. after a Windows reboot or `wsl --shutdown`. Until then SSH to GitHub fails with `Permission denied (publickey)`. Agent shells that do not source `~/.bashrc` must set `SSH_AUTH_SOCK=/run/user/1000/ssh-agent.socket` themselves.
 
+Start script (2026-10-27): `C:\Users\willc\OneDrive\Desktop\wsl-start.cmd` (double-click; a `.cmd` because the PowerShell execution policy is `Restricted`) runs `wsl.exe -d Ubuntu-24.04 --cd ~ -- bash /home/willc/.local/bin/wsl-start`. The WSL-side script `~/.local/bin/wsl-start` waits for the systemd ssh-agent socket, runs `ssh-add` only if the agent has no key (William types the passphrase), then opens VS Code on `$HOME` by full path. Two traps when changing it: `wsl.exe` strips double quotes, so `bash -ic "multi word command"` breaks (put logic in a script file instead), and files written from Windows tools into `\\wsl.localhost\...` get CRLF line endings, which bash rejects with `$'\r': command not found` (convert with `tr -d '\r'` inside WSL).
+
 Not done yet: Go and other toolchains (install in WSL when needed).
 
 Agent shell tip: run commands in WSL as root without a password via `wsl -d Ubuntu-24.04 -u root -- ...`. Inline quotes get mangled through PowerShell (`awk`, `tr`, `$` and `"`), so put multi-line or quote-heavy commands in a script file and run `tr -d '\r' < /mnt/c/.../script.sh | bash`.
