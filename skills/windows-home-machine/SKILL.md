@@ -52,7 +52,7 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 - `running scripts is disabled on this system` → `Restricted` execution policy → invoke with `-ExecutionPolicy Bypass -File`.
 - `Python was not found; run without arguments to install from the Microsoft Store` → Store stub, no Python on Windows by design → do not install it on Windows; use PowerShell for Windows-side scripts and run Python inside WSL.
 
-## WSL and Docker: installed and verified; WSL SSH key pending
+## WSL and Docker: installed and verified
 
 Decisions (William, 2026-10-27): distribution is **Ubuntu LTS**; Docker is **Docker Engine inside WSL** (not Docker Desktop). Probed the same day: Windows 11 Pro, firmware virtualization enabled, hypervisor not yet running, `wsl.exe` and `winget` present, no `docker`, F: empty with about 233 GB free.
 
@@ -64,7 +64,9 @@ Also done (2026-10-27): `C:\Users\willc\.wslconfig` caps WSL 2 at `memory=8GB` (
 
 Isolation (2026-10-27): `/etc/wsl.conf` has `[interop] appendWindowsPath=false`, so Windows `PATH` entries no longer leak into Ubuntu (verified: 0 `/mnt/` entries; `git` resolves to `/usr/bin/git`). Interop itself stays enabled and `/mnt/c` stays mounted so existing C: repos and VS Code remain reachable; do not work under `/mnt/c`. Because VS Code's folder is no longer on `PATH`, `~/.bashrc` defines a `code()` function that calls `C:\Users\willc\AppData\Local\Programs\Microsoft VS Code\bin\code` by full path, so `code .` still works. WSL's `/etc/wsl.conf` is root-owned: edit it with `sudo`, or from the agent shell with `wsl -d Ubuntu-24.04 -u root`; changes need `wsl --shutdown`.
 
-Not done yet: confirm `ssh -T git@github.com` works from WSL with the new key (the key file exists; William's confirmation is pending), Go, Node and other toolchains (install in WSL when needed).
+The WSL SSH key (`~/.ssh/id_ed25519`, passphrase-protected, separate from the Windows key) is registered on GitHub and verified working by William (2026-10-27).
+
+Not done yet: Go, Node and other toolchains (install in WSL when needed).
 
 Agent shell tip: run commands in WSL as root without a password via `wsl -d Ubuntu-24.04 -u root -- ...`. Inline quotes get mangled through PowerShell (`awk`, `tr`, `$` and `"`), so put multi-line or quote-heavy commands in a script file and run `tr -d '\r' < /mnt/c/.../script.sh | bash`.
 
