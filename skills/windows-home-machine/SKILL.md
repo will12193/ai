@@ -51,11 +51,17 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 - `running scripts is disabled on this system` → `Restricted` execution policy → invoke with `-ExecutionPolicy Bypass -File`.
 - `Python was not found; run without arguments to install from the Microsoft Store` → Store stub, no Python on Windows by design → do not install it on Windows; use PowerShell for Windows-side scripts and run Python inside WSL.
 
-## WSL and Docker: planned, not yet configured by this setup
+## WSL and Docker: installed and verified; Git/SSH and `.wslconfig` still to do
 
 Decisions (William, 2026-10-27): distribution is **Ubuntu LTS**; Docker is **Docker Engine inside WSL** (not Docker Desktop). Probed the same day: Windows 11 Pro, firmware virtualization enabled, hypervisor not yet running, `wsl.exe` and `winget` present, no `docker`, F: empty with about 233 GB free.
 
-Progress (2026-10-27): WSL 3.0.3 (default version 2, hypervisor active after reboot) and **Ubuntu 24.04 LTS** (`Ubuntu-24.04`, WSL 2) are installed, with the virtual disk at `F:\WSL\Ubuntu-24.04\ext4.vhdx`, via `wsl --install Ubuntu-24.04 --location F:\WSL\Ubuntu-24.04 --no-launch`. Not done yet: Linux user creation (William does this in his own window), `~/dev`, Docker Engine, Git/SSH inside WSL, `.wslconfig` limits.
+Done and verified (2026-10-27): WSL 3.0.3 (default version 2) and **Ubuntu 24.04 LTS** (`Ubuntu-24.04`, WSL 2, systemd enabled, default user `willc`) with the virtual disk at `F:\WSL\Ubuntu-24.04\ext4.vhdx` (installed with `wsl --install Ubuntu-24.04 --location F:\WSL\Ubuntu-24.04 --no-launch`). **Docker Engine 29.9.2** and Compose v5 are installed from Docker's official apt repo, enabled under systemd, and `willc` is in the `docker` group; `docker run hello-world` works without sudo. Docker's root dir `/var/lib/docker` is on the same F:-backed disk as `/`. `~/dev` exists in WSL.
+
+The ext4 disk reports about 1 TB, but F: has about 233 GB, and a vhdx grows on demand, so filling it would fail on F:, not at 1 TB. Keep an eye on `F:\WSL\Ubuntu-24.04\ext4.vhdx` growth and run `docker system prune` periodically.
+
+Not done yet: Git and SSH inside WSL, `.wslconfig` memory/CPU limits, Go, Node and other toolchains (install in WSL when needed).
+
+Agent shell tip: run commands in WSL as root without a password via `wsl -d Ubuntu-24.04 -u root -- ...`. Inline quotes get mangled through PowerShell (`awk`, `tr`, `$` and `"`), so put multi-line or quote-heavy commands in a script file and run `tr -d '\r' < /mnt/c/.../script.sh | bash`.
 
 - Inspect Windows edition, virtualization, WSL status, and existing Docker installations before choosing installation steps.
 - Use supported installation or relocation settings to place the Ubuntu distribution's virtual disk on F:.
