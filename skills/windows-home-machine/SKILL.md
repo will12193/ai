@@ -68,7 +68,11 @@ Isolation (2026-10-27): `/etc/wsl.conf` has `[interop] appendWindowsPath=false`,
 
 The WSL SSH key (`~/.ssh/id_ed25519`, passphrase-protected, separate from the Windows key) is registered on GitHub and verified working by William (2026-10-27).
 
-Not done yet: Go, Node and other toolchains (install in WSL when needed).
+Terminals (2026-10-27): Ubuntu is the default profile in Windows Terminal (`defaultProfile` is the `Ubuntu-24.04` GUID in `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json`) and in VS Code (`terminal.integrated.defaultProfile.windows` is `Ubuntu-24.04 (WSL)` in `%APPDATA%\Code\User\settings.json`, previously Git Bash). Inside a VS Code window connected to WSL the terminal is already Linux bash.
+
+Node (2026-10-27): managed with **nvm 0.40.8** in WSL (`~/.nvm`, installed with the official script pinned to a tag), Node LTS (24.22.1) as the default alias, npm 11.19.1. Use `nvm install`/`nvm use` and per-project `.nvmrc` for other versions; global npm packages land under `~/.nvm`, not on Windows. Go is not installed yet: install it in WSL (official tarball under `/usr/local/go` or a version manager) when a project needs it; nvm does not manage Go.
+
+Not done yet: Go and other toolchains (install in WSL when needed).
 
 Agent shell tip: run commands in WSL as root without a password via `wsl -d Ubuntu-24.04 -u root -- ...`. Inline quotes get mangled through PowerShell (`awk`, `tr`, `$` and `"`), so put multi-line or quote-heavy commands in a script file and run `tr -d '\r' < /mnt/c/.../script.sh | bash`.
 
