@@ -1,6 +1,6 @@
 ---
 name: windows-home-machine
-description: "Facts and workflow for William's Windows home development machine: folder and drive layout (repos on C:, F: reserved for WSL and Docker), Git and SSH setup, shell limitations, repo clones, and the planned WSL/Docker setup. Use when: setting up or maintaining that machine, cloning repositories, working out where something lives on C: or F:, configuring WSL, Docker or development storage, or hitting 'The term 'git' is not recognized', 'Permission denied (publickey)', 'running scripts is disabled on this system' or 'Python was not found' on it."
+description: "Facts and workflow for William's Windows home development machine: development happens in WSL (Ubuntu LTS on F:) with Docker Engine, nothing dev-related is installed on Windows, the dev folder is moving into WSL, plus Git and SSH setup, shell limitations and the WSL/Docker plan. Use when: setting up or maintaining that machine, installing any tool (Go, Node, Python, Docker), cloning repositories, working out where repos or storage live (C: vs F: vs WSL), configuring WSL, Docker or development storage, or hitting 'The term 'git' is not recognized', 'Permission denied (publickey)', 'running scripts is disabled on this system' or 'Python was not found' on it."
 ---
 
 # Windows home development machine
@@ -10,9 +10,10 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 ## Scope and storage
 
 - Windows account home: `C:\Users\willc`.
-- Repositories and source code: `C:\Users\willc\Documents\dev`.
 - Drive `F:\`, named WSL by William, is dedicated to WSL distributions and Docker container storage.
-- Keep repositories on C: unless William explicitly changes this. Explain any WSL bind-mount performance trade-offs before proposing a different location.
+- **Development lives in WSL, not on Windows.** Go, Node and other toolchains are installed in WSL, and most things run and compile there. Do not install dev tools, runtimes or language toolchains directly on Windows; install them in WSL instead. Windows keeps only what it needs to host things (Git, VS Code, the WSL feature, the ssh-agent).
+- **The whole `dev` folder is moving into the WSL filesystem** (William's decision, 2026-10-27). `C:\Users\willc\Documents\dev` is the current/legacy location until the move is done and recorded here. Inside WSL the repos live on the Linux filesystem (not under `/mnt/c`), which also avoids slow cross-filesystem I/O.
+- The ai hub repo is the open question: `sync.ps1` runs on Windows and mirrors into the Windows `~/.copilot`, so it stays at `C:\Users\willc\Documents\dev\ai` until the sync is reworked or William decides otherwise. Ask before moving it.
 - Personal skills load from `C:\Users\willc\.copilot\skills\<skill-name>\SKILL.md`, a mirror of the ai hub repo. Edit them in the repo (see `maintain-ai-hub-backup-repo`), not there.
 
 ## Shell environment (verified 2026-10-27)
@@ -34,7 +35,7 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 
 1. Inspect the current installation and configuration before making changes; recorded setup facts may be stale.
 2. Set up and verify Git before WSL and Docker.
-3. Get repository URLs from William. Clone into the development directory without overwriting existing folders.
+3. Get repository URLs from William. Clone into the WSL `dev` folder once it exists (until then `C:\Users\willc\Documents\dev`), without overwriting existing folders.
 4. For private HTTPS repositories use Git Credential Manager's interactive sign-in. Never ask for passwords or tokens in chat or store credentials in this skill.
 5. Inspect downloaded skill files before enabling them. Do not assume arbitrary cloned folders are auto-discovered; use the supported personal skill locations.
 6. Follow the active chat's workspace and confirmation requirements before modifying repositories or running project-dependent commands.
@@ -45,15 +46,18 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 - `The term 'git' is not recognized` → shell started before Git's PATH entry existed → use the absolute path or restart the terminal.
 - `Permission denied (publickey)` or a passphrase prompt on push/pull → `ssh-agent` has no key loaded, typically after a reboot → ask William to run `ssh-add C:\Users\willc\.ssh\id_ed25519` in his own window. Never request the passphrase in chat.
 - `running scripts is disabled on this system` → `Restricted` execution policy → invoke with `-ExecutionPolicy Bypass -File`.
-- `Python was not found; run without arguments to install from the Microsoft Store` → Store stub, no Python installed → do not rely on `python`; use PowerShell.
+- `Python was not found; run without arguments to install from the Microsoft Store` → Store stub, no Python on Windows by design → do not install it on Windows; use PowerShell for Windows-side scripts and run Python inside WSL.
 
 ## WSL and Docker: planned, not yet configured by this setup
 
+Decisions (William, 2026-10-27): distribution is **Ubuntu LTS**; Docker is **Docker Engine inside WSL** (not Docker Desktop). Probed the same day: Windows 11 Pro, firmware virtualization enabled, hypervisor not yet running, `wsl.exe` and `winget` present, no `docker`, F: empty with about 233 GB free.
+
 - Inspect Windows edition, virtualization, WSL status, and existing Docker installations before choosing installation steps.
-- Confirm the Linux distribution and Docker option with William before installation.
-- Use supported installation or relocation settings to place WSL distributions and Docker's persistent Linux data on F:.
-- Do not assume moving a WSL distribution also moves Docker's data disk. Verify both storage locations independently.
-- Keep Docker images, writable container layers, and named volumes in Docker's F:-backed storage. Bind mounts follow their host paths; repository mounts remain on C:.
+- Use supported installation or relocation settings to place the Ubuntu distribution's virtual disk on F:.
+- Install Docker Engine inside Ubuntu, with its data root (`/var/lib/docker`) inside the F:-backed distribution disk. Do not assume moving a distribution also moves anything else; verify the storage location.
+- Keep Docker images, writable container layers, and named volumes in the WSL filesystem. Repositories live in the WSL `dev` folder, so mounts stay on the Linux filesystem.
+- Back up the distribution (`wsl --export`) before moving or changing it, and before moving the `dev` folder into WSL.
+- Git and SSH inside WSL: the Windows ssh-agent is not visible from WSL. Do not copy the passphrase-protected private key across without William's confirmation.
 - Do not format F:, unregister distributions, delete virtual disks, or move existing data without explicit confirmation and a backup plan.
 - Explain elevation and restart requirements before enabling Windows features. Do not reboot automatically.
 - Validate the intended distribution uses WSL 2, verify Docker can run a test container, and confirm persistent data locations before marking setup complete.
