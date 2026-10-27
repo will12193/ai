@@ -54,7 +54,7 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 
 Decisions (William, 2026-10-27): distribution is **Ubuntu LTS**; Docker is **Docker Engine inside WSL** (not Docker Desktop). Probed the same day: Windows 11 Pro, firmware virtualization enabled, hypervisor not yet running, `wsl.exe` and `winget` present, no `docker`, F: empty with about 233 GB free.
 
-Progress (2026-10-27): the WSL platform (WSL 3.0.3) and the Virtual Machine Platform feature were installed with `wsl --install --no-distribution` from an elevated prompt. **A reboot is pending.** No distribution, Docker Engine or `~/dev` exists yet.
+Progress (2026-10-27): WSL 3.0.3 (default version 2, hypervisor active after reboot) and **Ubuntu 24.04 LTS** (`Ubuntu-24.04`, WSL 2) are installed, with the virtual disk at `F:\WSL\Ubuntu-24.04\ext4.vhdx`, via `wsl --install Ubuntu-24.04 --location F:\WSL\Ubuntu-24.04 --no-launch`. Not done yet: Linux user creation (William does this in his own window), `~/dev`, Docker Engine, Git/SSH inside WSL, `.wslconfig` limits.
 
 - Inspect Windows edition, virtualization, WSL status, and existing Docker installations before choosing installation steps.
 - Use supported installation or relocation settings to place the Ubuntu distribution's virtual disk on F:.
