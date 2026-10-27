@@ -43,6 +43,8 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 
 ## Gotchas
 
+- `wsl` output is UTF-16, so captured text shows spaces between letters (`T h e   W i n d o w s`) → strip NUL characters (`-replace "`0",""`) before reading it.
+- Admin-only steps (enabling Windows features) cannot run from the agent's non-elevated shell → `Start-Process cmd.exe -Verb RunAs -Wait` with output redirected to a temp log; this raises a UAC prompt William must accept.
 - `The term 'git' is not recognized` → shell started before Git's PATH entry existed → use the absolute path or restart the terminal.
 - `Permission denied (publickey)` or a passphrase prompt on push/pull → `ssh-agent` has no key loaded, typically after a reboot → ask William to run `ssh-add C:\Users\willc\.ssh\id_ed25519` in his own window. Never request the passphrase in chat.
 - `running scripts is disabled on this system` → `Restricted` execution policy → invoke with `-ExecutionPolicy Bypass -File`.
@@ -51,6 +53,8 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 ## WSL and Docker: planned, not yet configured by this setup
 
 Decisions (William, 2026-10-27): distribution is **Ubuntu LTS**; Docker is **Docker Engine inside WSL** (not Docker Desktop). Probed the same day: Windows 11 Pro, firmware virtualization enabled, hypervisor not yet running, `wsl.exe` and `winget` present, no `docker`, F: empty with about 233 GB free.
+
+Progress (2026-10-27): the WSL platform (WSL 3.0.3) and the Virtual Machine Platform feature were installed with `wsl --install --no-distribution` from an elevated prompt. **A reboot is pending.** No distribution, Docker Engine or `~/dev` exists yet.
 
 - Inspect Windows edition, virtualization, WSL status, and existing Docker installations before choosing installation steps.
 - Use supported installation or relocation settings to place the Ubuntu distribution's virtual disk on F:.
