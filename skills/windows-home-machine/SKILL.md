@@ -43,6 +43,7 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 
 ## Gotchas
 
+- Ubuntu 24.04's packaged `ssh-agent.service` user unit only runs under X11 (`ConditionPathExists=/etc/X11/Xsession.options`), and `systemctl --user enable` says `The unit files have no installation config` → it exits at once and no agent socket appears → use a custom unit in `~/.config/systemd/user/` instead (details above).
 - `wsl` commands (even `wsl --list` and `wsl --shutdown`) hang forever, and the first interactive `wsl -d <distro>` shows a blank window → `WslService` is wedged (seen on the first launch of a freshly installed distro, 2026-10-27); `Restart-Service` stays in `StopPending` → from an elevated prompt, `Stop-Process -Id <wslservice PID> -Force` (the service restarts cleanly), then retry. Test responsiveness from the agent shell with `Start-Job` plus `Wait-Job -Timeout` so a hang does not block the session.
 - `wsl` output is UTF-16, so captured text shows spaces between letters (`T h e   W i n d o w s`) → strip NUL characters (`-replace "`0",""`) before reading it.
 - Admin-only steps (enabling Windows features) cannot run from the agent's non-elevated shell → `Start-Process cmd.exe -Verb RunAs -Wait` with output redirected to a temp log; this raises a UAC prompt William must accept.
@@ -51,7 +52,7 @@ Companion to `~/.copilot/instructions/coding-agents.instructions.md`, which carr
 - `running scripts is disabled on this system` → `Restricted` execution policy → invoke with `-ExecutionPolicy Bypass -File`.
 - `Python was not found; run without arguments to install from the Microsoft Store` → Store stub, no Python on Windows by design → do not install it on Windows; use PowerShell for Windows-side scripts and run Python inside WSL.
 
-## WSL and Docker: installed and verified; Git/SSH and `.wslconfig` still to do
+## WSL and Docker: installed and verified; WSL SSH key pending
 
 Decisions (William, 2026-10-27): distribution is **Ubuntu LTS**; Docker is **Docker Engine inside WSL** (not Docker Desktop). Probed the same day: Windows 11 Pro, firmware virtualization enabled, hypervisor not yet running, `wsl.exe` and `winget` present, no `docker`, F: empty with about 233 GB free.
 
@@ -59,7 +60,9 @@ Done and verified (2026-10-27): WSL 3.0.3 (default version 2) and **Ubuntu 24.04
 
 The ext4 disk reports about 1 TB, but F: has about 233 GB, and a vhdx grows on demand, so filling it would fail on F:, not at 1 TB. Keep an eye on `F:\WSL\Ubuntu-24.04\ext4.vhdx` growth and run `docker system prune` periodically.
 
-Not done yet: Git and SSH inside WSL, `.wslconfig` memory/CPU limits, Go, Node and other toolchains (install in WSL when needed).
+Also done (2026-10-27): `C:\Users\willc\.wslconfig` caps WSL 2 at `memory=8GB` (the machine has 32 GB; WSL's default was 16 GB); verified Ubuntu sees about 7.9 GB after `wsl --shutdown`. In Ubuntu, Git 2.43 has the same identity as Windows (`Wil`, `willcumines@gmail.com`), GitHub's ED25519 host key is in `~/.ssh/known_hosts` (checked against GitHub's published fingerprint `SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU`), `~/.ssh/config` has a `Host github.com` block (`IdentityFile ~/.ssh/id_ed25519`, `AddKeysToAgent yes`), and a custom user unit `~/.config/systemd/user/ssh-agent.service` runs `ssh-agent` on `$XDG_RUNTIME_DIR/ssh-agent.socket` (lingering enabled, `~/.bashrc` exports `SSH_AUTH_SOCK`). The WSL key is separate from the Windows key; William generates it himself (passphrase) and adds it to GitHub.
+
+Not done yet: confirm the WSL SSH key works with GitHub (see the status line at the end of this section), Go, Node and other toolchains (install in WSL when needed).
 
 Agent shell tip: run commands in WSL as root without a password via `wsl -d Ubuntu-24.04 -u root -- ...`. Inline quotes get mangled through PowerShell (`awk`, `tr`, `$` and `"`), so put multi-line or quote-heavy commands in a script file and run `tr -d '\r' < /mnt/c/.../script.sh | bash`.
 
