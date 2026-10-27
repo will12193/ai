@@ -12,7 +12,7 @@ This repo is the source of truth; `sync.sh` / `sync.ps1` mirror `skills/` and `i
 
 The hand-written parts of this README, `sync.sh`, `sync.ps1`, `.gitignore` and `.gitattributes` are edited here and never mirrored. `mcp-config.json` is the exception: it holds secrets, lives only in `~/.copilot`, and `sync.sh` generates `mcp-config.redacted.json` from it (`sync.ps1` does not redact; it leaves that file alone). `sync.ps1` needs only Windows PowerShell 5.1 and Git and compares and writes LF line endings.
 
-Mirroring deletes, so removing a skill here removes it from every machine's `~/.copilot` on its next pull. To set up a new machine, clone this repo and run `pull`, then re-add secrets to `mcp-config.json` by hand.
+Mirroring deletes, so removing a skill here removes it from every machine's `~/.copilot` on its next pull. To set up a new machine, clone this repo and run `pull` (the first pull into an empty `~/.copilot` mirrors straight in), then re-add secrets to `mcp-config.json` by hand. Each machine, including a WSL environment on a Windows machine, has its own clone and its own `~/.copilot`, so always `pull` before editing and `push` after.
 
 ## What's in here
 

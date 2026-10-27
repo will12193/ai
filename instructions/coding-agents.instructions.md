@@ -31,7 +31,7 @@ When the OS is Windows (home `C:\Users\willc`):
 - Existing C: repos are still edited from Windows; the ai hub's `sync.ps1` keeps running on Windows.
 - The Windows shell is PowerShell 5.1: no bash, rsync, pwsh or python. Scripts need `-ExecutionPolicy Bypass`.
 - `git` may not be on PATH: use `C:\Program Files\Git\cmd\git.exe`. GitHub is over SSH (account `will12193`); never ask for a key passphrase in chat.
-- The ai hub sync script here is `sync.ps1` (`sync.sh` on other machines): `pull` before editing skills or instructions, `push` after; see `maintain-ai-hub-backup-repo`.
+- The ai hub sync script here is `sync.ps1` for the Windows clone (`sync.sh` on other machines and inside WSL, from the `~/dev/ai` clone): `pull` before editing skills or instructions, `push` after; see `maintain-ai-hub-backup-repo`.
 
 ## Tell me when you are waiting
 

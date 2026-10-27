@@ -72,6 +72,10 @@ Terminals (2026-10-27): Ubuntu is the default profile in Windows Terminal (`defa
 
 Node (2026-10-27): managed with **nvm 0.40.8** in WSL (`~/.nvm`, installed with the official script pinned to a tag), Node LTS (24.22.1) as the default alias, npm 11.19.1. Use `nvm install`/`nvm use` and per-project `.nvmrc` for other versions; global npm packages land under `~/.nvm`, not on Windows. Go is not installed yet: install it in WSL (official tarball under `/usr/local/go` or a version manager) when a project needs it; nvm does not manage Go.
 
+ai hub in WSL (2026-10-27): a second clone at `~/dev/ai` (`git@github.com:will12193/ai.git`) syncs into the WSL `~/.copilot` with `sync.sh` (`rsync` and `python3` are already in Ubuntu), alongside the Windows clone and `sync.ps1`. They are independent machines as far as the hub is concerned: always `pull` before editing and `push` after, in whichever clone you edit. The Windows clone stays at `C:\Users\willc\Documents\dev\ai`.
+
+SSH key passphrase: the WSL ssh-agent holds the key in memory only, so run `ssh-add` once in an Ubuntu terminal (William types the passphrase; never in chat) after each WSL start, i.e. after a Windows reboot or `wsl --shutdown`. Until then SSH to GitHub fails with `Permission denied (publickey)`. Agent shells that do not source `~/.bashrc` must set `SSH_AUTH_SOCK=/run/user/1000/ssh-agent.socket` themselves.
+
 Not done yet: Go and other toolchains (install in WSL when needed).
 
 Agent shell tip: run commands in WSL as root without a password via `wsl -d Ubuntu-24.04 -u root -- ...`. Inline quotes get mangled through PowerShell (`awk`, `tr`, `$` and `"`), so put multi-line or quote-heavy commands in a script file and run `tr -d '\r' < /mnt/c/.../script.sh | bash`.

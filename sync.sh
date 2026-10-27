@@ -20,6 +20,10 @@ mkdir -p "$SRC/skills" "$SRC/instructions"
 # Mirroring overwrites ~/.copilot, so refuse if it holds edits that are not in the last commit.
 check_copilot_matches_head() {
     local tmp changes
+    # A fresh machine has nothing in ~/.copilot to protect, so the first pull may mirror straight in.
+    if [ -z "$(find "$SRC/skills" "$SRC/instructions" -type f -print -quit)" ]; then
+        return 0
+    fi
     tmp="$(mktemp -d)"
     git archive HEAD skills instructions | tar -x -C "$tmp"
     # diff compares content only; rsync -c also flags timestamp-only differences on macOS (openrsync),

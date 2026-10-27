@@ -7,7 +7,7 @@ description: "Maintain the user's AI hub repo (GitHub will12193/ai), the source 
 
 Companion to `~/.copilot/instructions/coding-agents.instructions.md` (global rules and skill map) and to `maintain-global-agent-config` (what may change and the disclosure duty); this file covers the hub repo and its sync scripts only.
 
-The hub repo (GitHub: will12193/ai; `~/dev/ai` on macOS, `C:\Users\willc\Documents\dev\ai` on the Windows home machine, see `windows-home-machine`) is the **source of truth** for `skills/` and `instructions/`. The sync script mirrors them into `~/.copilot` so every machine has the same set. Two equivalent scripts exist: `sync.sh` (bash, rsync, python3) and `sync.ps1` (Windows PowerShell 5.1, no extra tools). "The sync script" below means whichever matches the machine.
+The hub repo (GitHub: will12193/ai; `~/dev/ai` on macOS and inside WSL on the Windows home machine, `C:\Users\willc\Documents\dev\ai` on the Windows side of it, see `windows-home-machine`) is the **source of truth** for `skills/` and `instructions/`. The sync script mirrors them into `~/.copilot` so every machine has the same set. Two equivalent scripts exist: `sync.sh` (bash, rsync, python3) and `sync.ps1` (Windows PowerShell 5.1, no extra tools). "The sync script" below means whichever matches the machine.
 
 ## Golden rule
 
@@ -42,6 +42,8 @@ Commands: `<repo>/sync.sh pull|push ["msg"]`, or on Windows `powershell -NoProfi
 
 ## Platform notes
 
+- A WSL environment is its own machine as far as the hub is concerned: it has its own clone and its own `~/.copilot`, and uses `sync.sh` (needs only `git`, `rsync`, `python3`). A Windows machine with WSL therefore has two clones, each mirroring into its own `~/.copilot`; the remote check in `push` stops one overwriting the other. After changing `sync.sh` itself, run `git pull --ff-only` by hand in the other clones before `sync pull`, because the old script runs first.
+- The first `pull` on a machine whose `~/.copilot/skills` and `instructions` are empty skips the "differs from the last commit" check (nothing to lose); earlier versions failed there on a fresh machine.
 - `sync.ps1` compares and writes text with LF endings (Windows files may be CRLF; the repo stores LF, enforced by `.gitattributes`). Without that every file would show as changed.
 - `sync.ps1` does not redact `mcp-config.json`: it leaves `mcp-config.redacted.json` untouched and prints a note if the source exists. Port the redaction before relying on it. `sync.sh` redacts whenever the file exists.
 - Pull and push mirror with delete semantics, so a skill removed in the repo disappears from every machine's `~/.copilot` on its next pull. That is intended: all machines hold the same set.
