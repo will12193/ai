@@ -23,6 +23,10 @@ Global skills load from `~/.copilot/skills/<name>/SKILL.md`, which is a mirror o
 - **`align-repo-agent-files`**: load when asked to align, restructure or standardise a repo's instruction files and skills to my conventions (lossless: keeps existing knowledge, applies the structure).
 - **`windows-home-machine`**: load only when configuring or maintaining my Windows home development environment itself (WSL, Docker, drive storage, Windows Git/SSH, system-level tool installs), or on a Windows-specific shell/path error there. Not for normal development inside WSL.
 
+## Check skills before acting
+
+Before the first edit, command or test run of a task, and again whenever the work changes, match it against every skill map available (these global skills and the repo's own) and load each skill whose trigger applies. Triggers are actions as much as topics. Write one line first: `Skills check: <skills loaded and why>`, or `Skills check: none apply (<reason>)`. I would rather you load a skill you didn't need than skip one you did, so when in doubt, load it. Before the final answer, re-check the skill lists against the files touched and commands run, and load any skill you missed.
+
 ## My Windows home machine
 
 When the OS is Windows (home `C:\Users\willc`): all development activity (editing and running code, builds, tests, installs, git work in repos, new repos in `~/dev`) happens inside WSL, never directly on Windows, which is only a host. Work on Windows directly only when actively working on the environment itself; for that, load `windows-home-machine`.
