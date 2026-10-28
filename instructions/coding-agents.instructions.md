@@ -1,5 +1,6 @@
 ---
 description: "William's personal general-purpose rules for all coding agents, plus the map of his global skills. Always apply, in every repo."
+applyTo: '**'
 ---
 
 # Personal rules for all coding agents
