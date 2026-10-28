@@ -21,7 +21,7 @@ Mirroring deletes, so removing a skill here removes it from every machine's `~/.
 
 | File | Summary | applyTo |
 |---|---|---|
-| `coding-agents.instructions.md` | William's personal general-purpose rules for all coding agents, plus the map of his global skills. Always apply, in every repo. | none (always loaded) |
+| `coding-agents.instructions.md` | William's personal general-purpose rules for all coding agents, plus the map of his global skills. Always apply, in every repo. | `**` |
 
 ### Skills (`skills/`)
 
