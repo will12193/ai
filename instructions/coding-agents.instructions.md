@@ -16,6 +16,7 @@ Global skills load from `~/.copilot/skills/<name>/SKILL.md`, which is a mirror o
 - **`health-check`**: load when asked "health check" / what's loaded / what's in your context.
 - **`grilling`**: load when asked to grill, stress-test or interrogate a plan or idea.
 - **`diff-code-review`**: load when asked to review the branch/diff/changes before an MR.
+- **`diff-code-review-v2.0`**: load only when explicitly asked for "diff code review v2" / "v2.0" / an exhaustive diff review (reports every finding, severity-tagged, file by file).
 - **`gitlab-mr-summary`**: load when asked for an MR/PR description, summary or test plan.
 - **`maintain-global-agent-config`**: load **before** creating, editing, renaming or deleting anything under `~/.copilot` (whichever tool does it), and when I say "always", "never" or "from now on" about something that applies to all repos.
 - **`maintain-ai-hub-backup-repo`**: load **before** editing any skill or instruction (pull first, edit in the repo, push after), after any `~/.copilot` change, or when the ai hub repo / `sync.sh` / `sync.ps1` comes up.
