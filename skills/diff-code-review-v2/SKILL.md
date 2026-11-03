@@ -1,9 +1,9 @@
 ---
-name: diff-code-review-v2.0
-description: "Exhaustive v2.0 review of the code changes on the current branch (git diff against a base branch, default origin/master): reports every confirmed issue with a severity tag, reviewing file by file. Use when: the user explicitly asks for 'diff code review v2', 'diff-code-review-v2.0' or 'exhaustive diff review'. For a plain 'review the branch/diff', use `diff-code-review` instead."
+name: diff-code-review-v2
+description: "Exhaustive v2 review of the code changes on the current branch (git diff against a base branch, default origin/master): reports every confirmed issue with a severity tag, reviewing file by file. Use when: the user explicitly asks for 'diff code review v2', 'diff-code-review-v2' or 'exhaustive diff review'. For a plain 'review the branch/diff', use `diff-code-review` instead."
 ---
 
-# Diff Code Review v2.0
+# Diff Code Review v2
 
 Companion to `~/.copilot/instructions/coding-agents.instructions.md` (global rules and skill map); this file is the procedure for reviewing a branch diff. It is a stricter variant of `diff-code-review`: same criteria, but exhaustive. Review the code changes on the current branch against a base branch.
 
