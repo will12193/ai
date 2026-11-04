@@ -15,6 +15,7 @@ Global skills load from `~/.copilot/skills/<name>/SKILL.md`, which is a mirror o
 
 - **`health-check`**: load when asked "health check" / what's loaded / what's in your context.
 - **`grilling`**: load when asked to grill, stress-test or interrogate a plan or idea.
+- **`planning`**: load whenever I mention planning (plan this, make a plan, plan mode); it writes a plan spec to the repo's `tmp/` folder then grills me on it via `grilling`. Use it alongside any built-in planning tooling.
 - **`diff-code-review`**: load when asked to review the branch/diff/changes before an MR.
 - **`diff-code-review-v2`**: load only when explicitly asked for "diff code review v2" / an exhaustive diff review (reports every finding, severity-tagged, file by file).
 - **`gitlab-mr-summary`**: load when asked for an MR/PR description, summary or test plan.
